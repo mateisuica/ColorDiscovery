@@ -8,4 +8,5 @@ public class Constants {
     public static final String MESSAGE_PATH = "/savedColor";
     public static final String SHARED_PREFERANCE_NAME = "randomColor";
     public static final String SHARED_PREFERANCE_COLOR = "Color";
+    public static final String SHARED_PREFERANCE_SECONDARY_COLOR = "SecondaryColor";
 }
