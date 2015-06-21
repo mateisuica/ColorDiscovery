@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.wearable.activity.ConfirmationActivity;
@@ -29,6 +28,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
 
+import ro.quadroq.commonclasses.Utils;
+
 public class MainActivity extends Activity {
 
 
@@ -51,7 +52,7 @@ public class MainActivity extends Activity {
 
         imageView = (ImageView) findViewById(R.id.imageView);
         textView = (TextView) findViewById(R.id.textView);
-        backgroundColor = getRgb();
+        backgroundColor = Utils.getRgb();
 
         mDismissOverlay = (DismissOverlayView) findViewById(R.id.dismiss_overlay);
 
@@ -101,7 +102,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        backgroundColor = getSharedPreferences("randomColor", Context.MODE_PRIVATE).getInt("Color", getRgb());
+        backgroundColor = getSharedPreferences("randomColor", Context.MODE_PRIVATE).getInt("Color", Utils.getRgb());
         updateUI();
         mGoogleApiClient.connect();
     }
@@ -168,7 +169,7 @@ public class MainActivity extends Activity {
 
             float velocityPercentX    = Math.abs(velocityX / maxFlingVelocity);          // the percent is a value in the range of (0, 1]
 
-            final int toColor = getRgb();
+            final int toColor = Utils.getRgb();
             if(animation != null) {
                 animation.cancel();
             }
@@ -189,16 +190,11 @@ public class MainActivity extends Activity {
         }
     }
 
-    private int getRgb() {
-        return Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255));
-    }
+
 
     private void updateUI() {
-        textView.setText(getBackgroundString());
+        textView.setText(Utils.getColorString(backgroundColor));
         imageView.setImageDrawable(new ColorDrawable(backgroundColor));
     }
 
-    private String getBackgroundString() {
-        return "#" + Integer.toHexString(backgroundColor).substring(2).toUpperCase();
-    }
 }

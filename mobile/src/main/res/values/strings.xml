@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Color Discovery</string>
+    <string name="add_color">Add Color</string>
     <string name="select_colors_on_watch">No colors saved.</string>
 </resources>

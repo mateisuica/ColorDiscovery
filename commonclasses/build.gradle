@@ -1,28 +1,17 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "ro.quadroq.sexdice"
         minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
-
-    signingConfigs {
-        release {
-            storeFile file("../key/ColorDiscoveryKey.jks")
-            storePassword "pepsimax"
-            keyAlias "ColorDiscoveryKey"
-            keyPassword "pepsimax"
-        }
-    }
     buildTypes {
         release {
-            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -31,8 +20,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    wearApp project(':wear')
     compile 'com.android.support:appcompat-v7:22.0.0'
-    compile 'com.google.android.gms:play-services:7.0.0'
-    compile project(":commonclasses")
 }

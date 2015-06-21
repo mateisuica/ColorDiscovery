@@ -5,20 +5,22 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
+
+import ro.quadroq.commonclasses.Utils;
 
 
 public class MainActivity extends ActionBarActivity implements
@@ -38,6 +40,15 @@ public class MainActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_main);
         colorList = (ListView) findViewById(R.id.colorList);
         noColorsSign = (LinearLayout) findViewById(R.id.no_color_sign);
+        Button button = (Button) findViewById(R.id.addButton);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddColorActivity.class);
+                startActivity(intent);
+            }
+        });
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -74,7 +85,7 @@ public class MainActivity extends ActionBarActivity implements
 
                 // Add data to the intent, the receiving app will decide what to do with it.
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Look at this color");
-                intent.putExtra(Intent.EXTRA_TEXT, "I've discovered this new cool color using " + getString(R.string.app_name) + "! The color code is: " + getColorString(color));
+                intent.putExtra(Intent.EXTRA_TEXT, "I've discovered this new cool color using " + getString(R.string.app_name) + "! The color code is: " + Utils.getColorString(color));
                 startActivity(Intent.createChooser(intent, "Share the color"));
             }
         });
@@ -86,7 +97,6 @@ public class MainActivity extends ActionBarActivity implements
                 Cursor c = (Cursor) parent.getAdapter().getItem(position);
                 int colorId = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
                 getContentResolver().delete(ColorContentProvider.CONTENT_URI, ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)});
-                Wearable.DataApi.deleteDataItems(mGoogleApiClient, Uri.parse("wear://savedColor"));
                 return true;
             }
         });
@@ -137,7 +147,4 @@ public class MainActivity extends ActionBarActivity implements
         adapter.swapCursor(null);
     }
 
-    private String getColorString(int color) {
-        return "#" + Integer.toHexString(color).substring(2).toUpperCase();
-    }
 }
