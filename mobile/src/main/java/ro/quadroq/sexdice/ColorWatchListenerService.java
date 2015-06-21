@@ -13,6 +13,8 @@ import com.google.android.gms.wearable.WearableListenerService;
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
 
+import ro.quadroq.commonclasses.Constants;
+
 /**
  * Created by mateisuica on 21/06/15.
  */
@@ -37,7 +39,7 @@ public class ColorWatchListenerService extends WearableListenerService {
         // Loop through the events and send a message
         // to the node that created the data item.
         String path = messageEvent.getPath();
-        if (path.compareTo("/savedColor") == 0) {
+        if (path.compareTo(Constants.MESSAGE_PATH) == 0) {
             byte[] data = messageEvent.getData();
             ByteBuffer bb = ByteBuffer.wrap(data);
             int color = bb.getInt();

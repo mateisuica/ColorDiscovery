@@ -28,6 +28,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.List;
 
+import ro.quadroq.commonclasses.Constants;
 import ro.quadroq.commonclasses.Utils;
 
 public class MainActivity extends Activity {
@@ -102,14 +103,14 @@ public class MainActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        backgroundColor = getSharedPreferences("randomColor", Context.MODE_PRIVATE).getInt("Color", Utils.getRgb());
+        backgroundColor = getSharedPreferences(Constants.SHARED_PREFERANCE_NAME, Context.MODE_PRIVATE).getInt(Constants.SHARED_PREFERANCE_COLOR, Utils.getRgb());
         updateUI();
         mGoogleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
-        getSharedPreferences("randomColor", Context.MODE_PRIVATE).edit().putInt("Color", backgroundColor).apply();
+        getSharedPreferences(Constants.SHARED_PREFERANCE_NAME, Context.MODE_PRIVATE).edit().putInt(Constants.SHARED_PREFERANCE_COLOR, backgroundColor).apply();
         mGoogleApiClient.disconnect();
         super.onStop();
     }
@@ -144,7 +145,7 @@ public class MainActivity extends Activity {
             ByteBuffer b = ByteBuffer.allocate(4);
             b.order(ByteOrder.BIG_ENDIAN);
             if (nodeId != null && !TextUtils.isEmpty(nodeId)) {
-                Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, "/savedColor", b.putInt(backgroundColor).array());
+                Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, Constants.MESSAGE_PATH, b.putInt(backgroundColor).array());
 
                 Intent intent = new Intent(MainActivity.this, ConfirmationActivity.class);
                 intent.putExtra(ConfirmationActivity.EXTRA_ANIMATION_TYPE,

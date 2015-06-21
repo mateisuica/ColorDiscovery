@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import ro.quadroq.commonclasses.Constants;
 import ro.quadroq.commonclasses.Utils;
 import ro.quadroq.commonclasses.colorgenerator.ColorGeneratorView;
 
@@ -46,12 +47,12 @@ public class AddColorActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        colorGeneratorView.setColor(getSharedPreferences("randomColor", Context.MODE_PRIVATE).getInt("Color", Utils.getRgb()));
+        colorGeneratorView.setColor(getSharedPreferences(Constants.SHARED_PREFERANCE_NAME, Context.MODE_PRIVATE).getInt(Constants.SHARED_PREFERANCE_COLOR, Utils.getRgb()));
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        getSharedPreferences("randomColor", Context.MODE_PRIVATE).edit().putInt("Color", colorGeneratorView.getColor()).apply();
+        getSharedPreferences(Constants.SHARED_PREFERANCE_NAME, Context.MODE_PRIVATE).edit().putInt(Constants.SHARED_PREFERANCE_COLOR, colorGeneratorView.getColor()).apply();
     }
 }
