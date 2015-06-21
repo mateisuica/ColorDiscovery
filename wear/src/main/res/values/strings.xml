@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Color Discovery</string>
+    <string name="long_press_info">Long press to exit!</string>
+    <string name="sent_to_phone">Color sent to phone!</string>
+</resources>
