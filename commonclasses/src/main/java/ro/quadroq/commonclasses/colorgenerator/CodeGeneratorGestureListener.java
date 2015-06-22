@@ -3,11 +3,11 @@ package ro.quadroq.commonclasses.colorgenerator;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -97,13 +97,14 @@ public class CodeGeneratorGestureListener extends GestureDetector.SimpleOnGestur
         int maxFlingVelocity = ViewConfiguration.get(mContext).getScaledMaximumFlingVelocity();
         float velocityPercentX    = Math.abs(velocityX / maxFlingVelocity);          // the percent is a value in the range of (0, 1]
 
-        final int toColor = getRgb();
+        final int toColor = Utils.getRgb();
         if(animation != null) {
             animation.cancel();
         }
         animation = ValueAnimator.ofInt(backgroundColor, toColor);
         animation.setEvaluator(new ArgbEvaluator());
-        animation.setDuration(Math.round(10000 / Math.abs(1 + velocityPercentX)));
+        animation.setInterpolator(new DecelerateInterpolator(1 + velocityPercentX));
+        animation.setDuration(5000);
         animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -118,9 +119,7 @@ public class CodeGeneratorGestureListener extends GestureDetector.SimpleOnGestur
         return true;
     }
 
-    private int getRgb() {
-        return Color.rgb((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255));
-    }
+
 
     private void updateUI() {
         textView.setText(Utils.getColorString(backgroundColor));
