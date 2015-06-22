@@ -16,8 +16,8 @@ public class ColorsDatabaseHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_MAIN = "CREATE TABLE " +
             COLOR_TABLE + " " +                       // Table's name
             "(" +                           // The columns in the table
-            " _id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            " COLOR INTEGER" + ")";
+            " " + ColorItem.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            " " + ColorItem.COLUMN_COLOR + " INTEGER" + ")";
 
     public ColorsDatabaseHelper(Context context) {
         super(context, DBNAME, null, version);
