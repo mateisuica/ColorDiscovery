@@ -28,6 +28,9 @@
             android:name="ro.quadroq.sexdice.ColorContentProvider"
             android:authorities="ro.quadroq.contentprovider" >
         </provider>
+
+        <meta-data android:name="com.google.android.wearable.beta.app"
+            android:resource="@xml/wearable_app_desc"/>
     </application>
 
 </manifest>

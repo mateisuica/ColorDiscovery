@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wearableApp package="ro.quadroq.sexdice">
+    <versionCode>3</versionCode>
+    <versionName>1.2</versionName>
+    <rawPathResId>wear-release</rawPathResId>
+</wearableApp>

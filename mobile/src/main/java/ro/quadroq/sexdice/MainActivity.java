@@ -1,20 +1,22 @@
 package ro.quadroq.sexdice;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -28,8 +30,8 @@ public class MainActivity extends ActionBarActivity implements
 
     // private Cursor cursor;
     private ColorsCursorAdapter adapter;
-    private ListView colorList;
-    private LinearLayout noColorsSign;
+    private RecyclerView colorList;
+    private CardView noColorsSign;
 
     GoogleApiClient mGoogleApiClient;
     private static final String TAG = "MobileMainActivity";
@@ -38,9 +40,10 @@ public class MainActivity extends ActionBarActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        colorList = (ListView) findViewById(R.id.colorList);
-        noColorsSign = (LinearLayout) findViewById(R.id.no_color_sign);
-        Button button = (Button) findViewById(R.id.addButton);
+        colorList = (RecyclerView) findViewById(R.id.colorList);
+        noColorsSign = (CardView) findViewById(R.id.no_color_sign);
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.addButton);
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,36 +74,45 @@ public class MainActivity extends ActionBarActivity implements
                         // Request access only to the Wearable API
                 .addApi(Wearable.API)
                 .build();
-
-        colorList.setOnItemClickListener(new ListView.OnItemClickListener() {
+        colorList.setLayoutManager(new LinearLayoutManager(this));
+        colorList.addOnItemTouchListener(new ColorListOnItemTouchListener(this, new ColorListOnItemTouchListener.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(View childView, int position) {
+                Cursor c = adapter.getCursor();
+                c.moveToPosition(position);
+                        int color = c.getInt(c.getColumnIndex(ColorItem.COLUMN_COLOR));
 
-                Cursor c = (Cursor) parent.getAdapter().getItem(position);
-                int color = c.getInt(c.getColumnIndex(ColorItem.COLUMN_COLOR));
+                        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+                        intent.setType("text/plain");
 
-                Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                intent.setType("text/plain");
-
-                // Add data to the intent, the receiving app will decide what to do with it.
-                intent.putExtra(Intent.EXTRA_SUBJECT, "Look at this color");
-                intent.putExtra(Intent.EXTRA_TEXT, "I've discovered this new cool color using " + getString(R.string.app_name) + "! The color code is: " + Utils.getColorString(color));
-                startActivity(Intent.createChooser(intent, "Share the color"));
+                        // Add data to the intent, the receiving app will decide what to do with it.
+                        intent.putExtra(Intent.EXTRA_SUBJECT, "Look at this color");
+                        intent.putExtra(Intent.EXTRA_TEXT, "I've discovered this new cool color using " + getString(R.string.app_name) + "! The color code is: " + Utils.getColorString(color));
+                        startActivity(Intent.createChooser(intent, "Share the color"));
             }
-        });
-
-        colorList.setOnItemLongClickListener(new ListView.OnItemLongClickListener() {
 
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor c = (Cursor) parent.getAdapter().getItem(position);
+            public void onItemLongPress(View childView, int position) {
+                Cursor c = adapter.getCursor();
+                c.moveToPosition(position);
                 int colorId = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
+                final int colorColor = c.getInt(c.getColumnIndex(ColorItem.COLUMN_COLOR));
+                Snackbar.make(findViewById(R.id.snackbarPosition), R.string.color_removed, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.undo, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ContentValues contentValues = new ContentValues();
+                                contentValues.put(ColorItem.COLUMN_COLOR, colorColor);
+                                getContentResolver().insert(ColorContentProvider.CONTENT_URI, contentValues);
+                            }
+                        })
+                        .show();
+
                 getContentResolver().delete(ColorContentProvider.CONTENT_URI, ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)});
-                return true;
             }
-        });
-        adapter = new ColorsCursorAdapter(this, null, 0);
+        }));
+        adapter = new ColorsCursorAdapter(null);
         colorList.setAdapter(adapter);
 
         getLoaderManager().initLoader(0, null, this);
