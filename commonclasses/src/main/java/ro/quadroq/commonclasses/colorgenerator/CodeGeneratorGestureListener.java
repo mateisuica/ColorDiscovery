@@ -6,10 +6,10 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.SeekBar;
 
 import ro.quadroq.commonclasses.Utils;
 
@@ -18,21 +18,37 @@ import ro.quadroq.commonclasses.Utils;
  */
 public class CodeGeneratorGestureListener extends GestureDetector.SimpleOnGestureListener {
 
+    private static final String TAG = "CodeGeneratorListener";
+
     private final Context mContext;
     private ValueAnimator animation;
     private int backgroundColor;
-    private final TextView textView;
-    private final ImageView imageView;
+    private final ColorGestureViewHolder viewHolder;
     private ColorGeneratorView.DoubleTapListener doubleTapListener;
     private ColorGeneratorView.LongPressListener longPressListener;
 
 
-    public CodeGeneratorGestureListener(Context context, int initialColor, TextView textView, ImageView imageView) {
+    public CodeGeneratorGestureListener(Context context, int initialColor, ColorGestureViewHolder viewHolder) {
         this.mContext = context;
         this.backgroundColor = initialColor;
-        this.textView = textView;
-        this.imageView = imageView;
-        this.animation = new ValueAnimator();
+        this.viewHolder = viewHolder;
+        this.animation = getAnimation(initialColor, Utils.getRgb(), 0);
+        viewHolder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                animation.setCurrentPlayTime(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     public int getColor() {
@@ -65,12 +81,36 @@ public class CodeGeneratorGestureListener extends GestureDetector.SimpleOnGestur
         if(animation != null) {
             if (animation.isStarted()) {
                 animation.cancel();
-                return true;
             }
+            if(viewHolder.seekBar.getVisibility() == View.INVISIBLE) {
+                viewHolder.seekBar.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.seekBar.setVisibility(View.INVISIBLE);
+            }
+            return true;
         }
         return false;
-
     }
+
+        @Override
+     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            if(viewHolder.seekBar.getVisibility() == View.VISIBLE) {
+                int progress = viewHolder.seekBar.getProgress();
+                int scrollProgress = (int) distanceX  * (-1);
+
+//                Log.d(TAG, "Progress / scroll progress: " + progress + " " + scrollProgress);
+                    if(progress + scrollProgress < 0) {
+                        viewHolder.seekBar.setProgress(0);
+                    } else if(progress + scrollProgress > 5000) {
+                        viewHolder.seekBar.setProgress(5000);
+                    } else {
+                        viewHolder.seekBar.setProgress(progress + scrollProgress);
+                    }
+                animation.setCurrentPlayTime(viewHolder.seekBar.getProgress());
+                return true;
+            }
+            return false;
+     }
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
@@ -93,36 +133,45 @@ public class CodeGeneratorGestureListener extends GestureDetector.SimpleOnGestur
     @Override
     public boolean onFling(MotionEvent event1, MotionEvent event2,
                            final float velocityX,  final float velocityY) {
+        if(viewHolder.seekBar.getVisibility() == View.INVISIBLE) {
+            int maxFlingVelocity = ViewConfiguration.get(mContext).getScaledMaximumFlingVelocity();
+            float velocityPercentX = Math.abs(velocityX / maxFlingVelocity);          // the percent is a value in the range of (0, 1]
 
-        int maxFlingVelocity = ViewConfiguration.get(mContext).getScaledMaximumFlingVelocity();
-        float velocityPercentX    = Math.abs(velocityX / maxFlingVelocity);          // the percent is a value in the range of (0, 1]
+            if (viewHolder.seekBar.getVisibility() == View.VISIBLE) {
+                viewHolder.seekBar.setVisibility(View.INVISIBLE);
+            }
 
-        final int toColor = Utils.getRgb();
-        if(animation != null) {
-            animation.cancel();
+            final int toColor = Utils.getRgb();
+            if (animation != null) {
+                animation.cancel();
+            }
+            animation = getAnimation(backgroundColor, toColor, velocityPercentX);
+
+            animation.start();
+            return true;
         }
-        animation = ValueAnimator.ofInt(backgroundColor, toColor);
-        animation.setEvaluator(new ArgbEvaluator());
-        animation.setInterpolator(new DecelerateInterpolator(1 + velocityPercentX));
-        animation.setDuration(5000);
-        animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        return false;
+    }
+
+    private ValueAnimator getAnimation(int initialColor, int finalColor, float velocityPercentX) {
+        ValueAnimator animator = ValueAnimator.ofInt(initialColor, finalColor);
+        animator.setEvaluator(new ArgbEvaluator());
+        animator.setInterpolator(new DecelerateInterpolator(1 + velocityPercentX));
+        animator.setDuration(5000);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 backgroundColor = (int) animation.getAnimatedValue();
+                viewHolder.seekBar.setProgress((int)animation.getCurrentPlayTime());
                 updateUI();
             }
-
         });
-
-        animation.start();
-
-        return true;
+        return animator;
     }
 
 
-
     private void updateUI() {
-        textView.setText(Utils.getColorString(backgroundColor));
-        imageView.setImageDrawable(new ColorDrawable(backgroundColor));
+        viewHolder.textView.setText(Utils.getColorString(backgroundColor));
+        viewHolder.imageView.setImageDrawable(new ColorDrawable(backgroundColor));
     }
 }

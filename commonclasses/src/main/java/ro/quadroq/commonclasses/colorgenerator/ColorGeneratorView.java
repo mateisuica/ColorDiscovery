@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import ro.quadroq.commonclasses.R;
@@ -26,9 +27,12 @@ public class ColorGeneratorView extends LinearLayout {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.color_generator_view, this, true);
-        TextView textView = (TextView) findViewById(R.id.textView);
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
-        gestureListener = new CodeGeneratorGestureListener(context, 0, textView, imageView);
+        ColorGestureViewHolder colorGestureViewHolder = new ColorGestureViewHolder();
+        colorGestureViewHolder.root = this;
+        colorGestureViewHolder.textView = (TextView) findViewById(R.id.textView);
+        colorGestureViewHolder.imageView = (ImageView) findViewById(R.id.imageView);
+        colorGestureViewHolder.seekBar = (SeekBar) findViewById(R.id.seekBar);
+        gestureListener = new CodeGeneratorGestureListener(context, 0, colorGestureViewHolder);
         mDetector = new GestureDetector(context, gestureListener);
 
     }

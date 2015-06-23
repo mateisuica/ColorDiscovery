@@ -18,5 +18,16 @@
         android:id="@+id/textView"
         />
 
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/seekBar"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:max="5000"
+        android:layout_alignParentBottom="true"
+        android:visibility="invisible"
+        />
+
 
 </RelativeLayout>
