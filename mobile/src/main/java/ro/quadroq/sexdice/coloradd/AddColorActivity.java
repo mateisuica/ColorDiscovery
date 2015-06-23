@@ -1,4 +1,4 @@
-package ro.quadroq.sexdice;
+package ro.quadroq.sexdice.coloradd;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -10,6 +10,9 @@ import android.widget.Toast;
 import ro.quadroq.commonclasses.Constants;
 import ro.quadroq.commonclasses.Utils;
 import ro.quadroq.commonclasses.colorgenerator.ColorGeneratorView;
+import ro.quadroq.sexdice.ColorContentProvider;
+import ro.quadroq.sexdice.ColorItem;
+import ro.quadroq.sexdice.R;
 
 /**
  * Created by mateisuica on 21/06/15.

@@ -32,7 +32,7 @@ public class ColorGeneratorView extends LinearLayout {
         colorGestureViewHolder.textView = (TextView) findViewById(R.id.textView);
         colorGestureViewHolder.imageView = (ImageView) findViewById(R.id.imageView);
         colorGestureViewHolder.seekBar = (SeekBar) findViewById(R.id.seekBar);
-        gestureListener = new CodeGeneratorGestureListener(context, 0, colorGestureViewHolder);
+        gestureListener = new CodeGeneratorGestureListener(0, colorGestureViewHolder);
         mDetector = new GestureDetector(context, gestureListener);
 
     }

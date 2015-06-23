@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
 
 import ro.quadroq.commonclasses.Utils;
+import ro.quadroq.sexdice.coloradd.AddColorActivity;
 
 
 public class MainActivity extends ActionBarActivity implements
@@ -87,9 +88,9 @@ public class MainActivity extends ActionBarActivity implements
                         intent.setType("text/plain");
 
                         // Add data to the intent, the receiving app will decide what to do with it.
-                        intent.putExtra(Intent.EXTRA_SUBJECT, "Look at this color");
+                        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
                         intent.putExtra(Intent.EXTRA_TEXT, "I've discovered this new cool color using " + getString(R.string.app_name) + "! The color code is: " + Utils.getColorString(color));
-                        startActivity(Intent.createChooser(intent, "Share the color"));
+                        startActivity(Intent.createChooser(intent, getString(R.string.share_dialog_title)));
             }
 
             @Override

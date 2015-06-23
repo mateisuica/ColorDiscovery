@@ -2,12 +2,10 @@ package ro.quadroq.commonclasses.colorgenerator;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.SeekBar;
 
@@ -20,7 +18,6 @@ public class CodeGeneratorGestureListener extends GestureDetector.SimpleOnGestur
 
     private static final String TAG = "CodeGeneratorListener";
 
-    private final Context mContext;
     private ValueAnimator animation;
     private int backgroundColor;
     private final ColorGestureViewHolder viewHolder;
@@ -28,11 +25,11 @@ public class CodeGeneratorGestureListener extends GestureDetector.SimpleOnGestur
     private ColorGeneratorView.LongPressListener longPressListener;
 
 
-    public CodeGeneratorGestureListener(Context context, int initialColor, ColorGestureViewHolder viewHolder) {
-        this.mContext = context;
+    public CodeGeneratorGestureListener(int initialColor, ColorGestureViewHolder viewHolder) {
+
         this.backgroundColor = initialColor;
         this.viewHolder = viewHolder;
-        this.animation = getAnimation(initialColor, Utils.getRgb(), 0);
+        this.animation = getAnimation(initialColor, Utils.getRgb());
         viewHolder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -60,6 +57,7 @@ public class CodeGeneratorGestureListener extends GestureDetector.SimpleOnGestur
         if(animation != null) {
             animation.cancel();
         }
+        animation = getAnimation(color, Utils.getRgb());
         updateUI();
     }
 
@@ -134,18 +132,12 @@ public class CodeGeneratorGestureListener extends GestureDetector.SimpleOnGestur
     public boolean onFling(MotionEvent event1, MotionEvent event2,
                            final float velocityX,  final float velocityY) {
         if(viewHolder.seekBar.getVisibility() == View.INVISIBLE) {
-            int maxFlingVelocity = ViewConfiguration.get(mContext).getScaledMaximumFlingVelocity();
-            float velocityPercentX = Math.abs(velocityX / maxFlingVelocity);          // the percent is a value in the range of (0, 1]
-
-            if (viewHolder.seekBar.getVisibility() == View.VISIBLE) {
-                viewHolder.seekBar.setVisibility(View.INVISIBLE);
-            }
 
             final int toColor = Utils.getRgb();
             if (animation != null) {
                 animation.cancel();
             }
-            animation = getAnimation(backgroundColor, toColor, velocityPercentX);
+            animation = getAnimation(backgroundColor, toColor);
 
             animation.start();
             return true;
@@ -153,10 +145,10 @@ public class CodeGeneratorGestureListener extends GestureDetector.SimpleOnGestur
         return false;
     }
 
-    private ValueAnimator getAnimation(int initialColor, int finalColor, float velocityPercentX) {
+    private ValueAnimator getAnimation(int initialColor, int finalColor) {
         ValueAnimator animator = ValueAnimator.ofInt(initialColor, finalColor);
         animator.setEvaluator(new ArgbEvaluator());
-        animator.setInterpolator(new DecelerateInterpolator(1 + velocityPercentX));
+        animator.setInterpolator(new DecelerateInterpolator());
         animator.setDuration(5000);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override

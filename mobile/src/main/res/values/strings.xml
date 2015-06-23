@@ -3,5 +3,7 @@
     <string name="add_color">Add Color</string>
     <string name="select_colors_on_watch">No colors saved.</string>
     <string name="color_removed">The color has been removed.</string>
+    <string name="share_subject">Look at this color</string>
+    <string name="share_dialog_title">Share the color</string>
     <string name="undo">Undo</string>
 </resources>

@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddColorActivity"
+            android:name=".coloradd.AddColorActivity"
             android:label="@string/add_color" />
         <service android:name="ro.quadroq.sexdice.ColorWatchListenerService">
             <intent-filter>
