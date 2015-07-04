@@ -6,7 +6,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "ro.quadroq.sexdice"
+        applicationId "ro.quadroq.colordiscovery"
         minSdkVersion 21
         targetSdkVersion 22
         versionCode 4
