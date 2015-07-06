@@ -19,6 +19,9 @@
         <activity
             android:name="ro.quadroq.colordiscovery.coloradd.AddColorActivity"
             android:label="@string/add_color" />
+        <activity
+            android:name="ro.quadroq.colordiscovery.colordetails.ColorDetailsActivity"
+            android:label="@string/color_details" />
         <service android:name="ro.quadroq.colordiscovery.ColorWatchListenerService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />

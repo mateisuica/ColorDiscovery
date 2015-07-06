@@ -23,7 +23,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
 
 import ro.quadroq.colordiscovery.coloradd.AddColorActivity;
-import ro.quadroq.commonclasses.Utils;
+import ro.quadroq.colordiscovery.colordetails.ColorDetailsActivity;
 
 
 public class MainActivity extends ActionBarActivity implements
@@ -82,15 +82,10 @@ public class MainActivity extends ActionBarActivity implements
             public void onItemClick(View childView, int position) {
                 Cursor c = adapter.getCursor();
                 c.moveToPosition(position);
-                        int color = c.getInt(c.getColumnIndex(ColorItem.COLUMN_COLOR));
-
-                        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
-                        intent.setType("text/plain");
-
-                        // Add data to the intent, the receiving app will decide what to do with it.
-                        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share_subject));
-                        intent.putExtra(Intent.EXTRA_TEXT, "I've discovered this new cool color using " + getString(R.string.app_name) + "! The color code is: " + Utils.getColorString(color));
-                        startActivity(Intent.createChooser(intent, getString(R.string.share_dialog_title)));
+                int color = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
+                Intent intent = new Intent(MainActivity.this, ColorDetailsActivity.class);
+                intent.putExtra("colorId", color);
+                startActivity(intent);
             }
 
             @Override

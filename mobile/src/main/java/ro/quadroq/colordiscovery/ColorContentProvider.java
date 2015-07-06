@@ -79,8 +79,7 @@ public class ColorContentProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         int uriType = sUriMatcher.match(uri);
         SQLiteDatabase sqlDB = database.getWritableDatabase();
-        int rowsDeleted = 0;
-        long id = 0;
+        long id;
         switch (uriType) {
             case COLORS:
                 id = sqlDB.insert(ColorsDatabaseHelper.COLOR_TABLE, null, values);
@@ -96,7 +95,7 @@ public class ColorContentProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         int uriType = sUriMatcher.match(uri);
         SQLiteDatabase sqlDB = database.getWritableDatabase();
-        int rowsDeleted = 0;
+        int rowsDeleted;
         switch (uriType) {
             case COLORS:
                 rowsDeleted = sqlDB.delete(ColorsDatabaseHelper.COLOR_TABLE, selection,
@@ -126,7 +125,7 @@ public class ColorContentProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         int uriType = sUriMatcher.match(uri);
         SQLiteDatabase sqlDB = database.getWritableDatabase();
-        int rowsUpdated = 0;
+        int rowsUpdated;
         switch (uriType) {
             case COLORS:
                 rowsUpdated = sqlDB.update(ColorsDatabaseHelper.COLOR_TABLE,
