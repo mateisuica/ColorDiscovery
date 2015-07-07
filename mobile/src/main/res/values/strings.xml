@@ -7,7 +7,7 @@
     <string name="share_subject">Look at this color</string>
     <string name="share_dialog_title">Share the color</string>
     <string name="undo">Undo</string>
-    <string name="new_name">New name</string>
+    <string name="new_name">Color alias</string>
     <string name="red">Red</string>
     <string name="green">Green</string>
     <string name="blue">Blue</string>

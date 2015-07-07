@@ -3,6 +3,7 @@ package ro.quadroq.colordiscovery;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,12 @@ public class ColorsCursorAdapter extends RecyclerView.Adapter<ColorsCursorAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         mCursor.moveToPosition(position);
         int color = mCursor.getInt(mCursor.getColumnIndex(ColorItem.COLUMN_COLOR));
-        holder.colorName.setText(Utils.getColorString(color));
+        String customName = mCursor.getString(mCursor.getColumnIndex(ColorItem.COLUMN_NAME));
+        String colorName = Utils.getColorString(color);
+        if(!TextUtils.isEmpty(customName)) {
+            colorName = colorName + " - " + customName;
+        }
+        holder.colorName.setText(colorName);
         holder.colorPreview.setImageDrawable(new ColorDrawable(color));
     }
 

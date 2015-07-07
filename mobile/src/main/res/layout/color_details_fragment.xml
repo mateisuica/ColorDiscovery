@@ -12,12 +12,11 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        card_view:cardBackgroundColor="@android:color/background_dark"
-        android:layout_margin="5dp"
         card_view:cardCornerRadius="4dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:orientation="vertical"
             >
             <RelativeLayout
@@ -45,6 +44,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/color_details_label_margin_top"
                 android:layout_gravity="center"
                 >
                 <TextView
@@ -57,6 +57,7 @@
 
                 <EditText
                     android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:id="@+id/colorNewName" />
             </LinearLayout>
@@ -65,13 +66,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/color_details_label_margin_top"
                 >
                 <TextView
                     android:layout_width="@dimen/color_details_label_width"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/red"
-                    android:layout_marginTop="@dimen/color_details_label_margin_top"
                     android:textAppearance="@android:style/TextAppearance.Large"
                     android:id="@+id/redLabel" />
 
@@ -88,13 +89,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/color_details_label_margin_top"
                 >
                 <TextView
                     android:layout_width="@dimen/color_details_label_width"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/green"
-                    android:layout_marginTop="@dimen/color_details_label_margin_top"
                     android:textAppearance="@android:style/TextAppearance.Large"
                     android:id="@+id/greenLabel" />
 
@@ -110,13 +111,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="@dimen/color_details_label_margin_top"
                 >
                 <TextView
                     android:layout_width="@dimen/color_details_label_width"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/blue"
-                    android:layout_marginTop="@dimen/color_details_label_margin_top"
                     android:textAppearance="@android:style/TextAppearance.Large"
                     android:id="@+id/blueLabel" />
 

@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import ro.quadroq.colordiscovery.ColorContentProvider;
 import ro.quadroq.colordiscovery.ColorItem;
@@ -35,14 +36,15 @@ public class ColorDetailsFragment extends Fragment {
     private SeekBar redBar;
     private SeekBar blueBar;
     private SeekBar greenBar;
+    private int colorCode;
+    private String customName;
+    private EditText colorNewName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
             colorId = getArguments().getInt("colorId");
-            colorCursor = getActivity().getContentResolver().query(ColorContentProvider.CONTENT_URI,
-                    null, ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)}, null);
         }
     }
 
@@ -52,46 +54,125 @@ public class ColorDetailsFragment extends Fragment {
         View root = inflater.inflate(R.layout.color_details_fragment, container, false);
         imageView = (ImageView) root.findViewById(R.id.colorPreview);
         textView = (TextView) root.findViewById(R.id.colorName);
+        colorNewName = (EditText) root.findViewById(R.id.colorNewName);
         redBar = (SeekBar) root.findViewById(R.id.redBar);
         blueBar = (SeekBar) root.findViewById(R.id.blueBar);
         greenBar = (SeekBar) root.findViewById(R.id.greenBar);
-        bindDataToUI(colorCursor);
+
+        redBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (Color.red(colorCode) != progress) {
+                    colorCode = colorCode & 0xFF00FFFF;
+                    colorCode = colorCode | (progress << 16);
+                    bindDataToUI(colorCode, customName);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        greenBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (Color.green(colorCode) != progress) {
+                    colorCode = colorCode & 0xFFFF00FF;
+                    colorCode = colorCode | (progress << 8);
+                    bindDataToUI(colorCode, customName);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        blueBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (Color.blue(colorCode) != progress) {
+                    colorCode = colorCode & 0xFFFFFF00;
+                    colorCode = colorCode | progress;
+                    bindDataToUI(colorCode, customName);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        refreshDBdata();
         final EditText colorNewName = (EditText) root.findViewById(R.id.colorNewName);
         FloatingActionButton button = (FloatingActionButton) root.findViewById(R.id.saveButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String colorNewNameString = colorNewName.getText().toString();
-
-                if (!TextUtils.isEmpty(colorNewNameString)) {
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put(ColorItem.COLUMN_NAME, colorNewNameString);
-                    getActivity().getContentResolver().update(ColorContentProvider.CONTENT_URI, contentValues,
-                            ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)});
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(ColorItem.COLUMN_NAME, colorNewNameString);
+                contentValues.put(ColorItem.COLUMN_COLOR, colorCode);
+                int updated = getActivity().getContentResolver().update(ColorContentProvider.CONTENT_URI, contentValues,
+                        ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)});
+                if(updated > 0) {
+                    Toast.makeText(getActivity(), "The changes were saved successfully!", Toast.LENGTH_SHORT).show();
+                    refreshDBdata();
+                } else {
+                    Toast.makeText(getActivity(), "There was a problem saving the changes!", Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
         return root;
     }
 
-    private void bindDataToUI(Cursor c) {
-        if(c != null && c.getCount() > 0) {
-            c.moveToFirst();
-            int colorCode = colorCursor.getInt(colorCursor.getColumnIndex(ColorItem.COLUMN_COLOR));
-            imageView.setImageDrawable(new ColorDrawable(colorCode));
-            String colorName = Utils.getColorString(colorCode);
-            String customName = colorCursor.getString(colorCursor.getColumnIndex(ColorItem.COLUMN_NAME));
-            if(customName != null) {
-                colorName = colorName + " - " + customName;
-            }
-            textView.setText(colorName);
-            int red = Color.red(colorCode);
-            int green = Color.green(colorCode);
-            int blue = Color.blue(colorCode);
-
-            redBar.setProgress(red);
-            blueBar.setProgress(blue);
-            greenBar.setProgress(green);
+    private void refreshDBdata() {
+        colorCursor = getActivity().getContentResolver().query(ColorContentProvider.CONTENT_URI,
+                null, ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)}, null);
+        if(colorCursor != null && colorCursor.getCount() > 0) {
+            colorCursor.moveToFirst();
+            colorCode = colorCursor.getInt(colorCursor.getColumnIndex(ColorItem.COLUMN_COLOR));
+            customName = colorCursor.getString(colorCursor.getColumnIndex(ColorItem.COLUMN_NAME));
+            colorNewName.setText(customName);
+            bindDataToUI(colorCode, customName);
         }
+    }
+
+
+
+    private void bindDataToUI(int color, String customName) {
+
+        imageView.setImageDrawable(new ColorDrawable(color));
+        String colorName = Utils.getColorString(color);
+        if(!TextUtils.isEmpty(customName)) {
+            colorName = colorName + " - " + customName;
+        }
+        textView.setText(colorName);
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+
+        redBar.setProgress(red);
+        blueBar.setProgress(blue);
+        greenBar.setProgress(green);
     }
 }
