@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Descoperă culori</string>
+    <string name="long_press_info">Ține apăsat lung ca să ieși!</string>
+    <string name="sent_to_phone">Culoarea a fost trimisă la telefon!</string>
+</resources>

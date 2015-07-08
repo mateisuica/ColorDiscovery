@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Descoperă culori</string>
+    <string name="add_color">Adaugă culoare</string>
+    <string name="color_details">Detaliile culorii</string>
+    <string name="select_colors_on_watch">Nicio culoare salvată.</string>
+    <string name="color_removed">Culoarea a fost ștearsă.</string>
+    <string name="share_subject">Uite-te la culoarea asta</string>
+    <string name="share_dialog_title">Împarte culoarea</string>
+    <string name="undo">Refă</string>
+    <string name="new_name">Poreclă culoare</string>
+    <string name="red">Roșu</string>
+    <string name="green">Verde</string>
+    <string name="blue">Albastru</string>
+</resources>
