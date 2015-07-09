@@ -4,7 +4,9 @@ import android.app.Fragment;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -171,8 +173,18 @@ public class ColorDetailsFragment extends Fragment {
         int green = Color.green(color);
         int blue = Color.blue(color);
 
+        Rect redBounds = redBar.getProgressDrawable().getBounds();
+        Rect greenBounds = greenBar.getProgressDrawable().getBounds();
+        Rect blueBounds = blueBar.getProgressDrawable().getBounds();
+        redBar.setProgressDrawable(new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[]{Color.rgb(0, green, blue), Color.rgb(255, green, blue)}));
+        redBar.getProgressDrawable().setBounds(redBounds);
         redBar.setProgress(red);
-        blueBar.setProgress(blue);
+        greenBar.setProgressDrawable(new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[]{Color.rgb(red, 0, blue), Color.rgb(red, 255, blue)}));
+        greenBar.getProgressDrawable().setBounds(greenBounds);
         greenBar.setProgress(green);
+        blueBar.setProgressDrawable(new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, new int[]{Color.rgb(red, green, 0), Color.rgb(red, green, 255)}));
+        blueBar.getProgressDrawable().setBounds(blueBounds);
+        blueBar.setProgress(blue);
+
     }
 }
