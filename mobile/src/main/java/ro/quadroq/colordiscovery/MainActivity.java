@@ -1,32 +1,38 @@
 package ro.quadroq.colordiscovery;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.app.LoaderManager;
+import android.app.WallpaperManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
+
+import java.io.IOException;
 
 import ro.quadroq.colordiscovery.coloradd.AddColorActivity;
 import ro.quadroq.colordiscovery.colordetails.ColorDetailsActivity;
 
 
-public class MainActivity extends ActionBarActivity implements
+public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
     // private Cursor cursor;
@@ -55,23 +61,6 @@ public class MainActivity extends ActionBarActivity implements
         });
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(Bundle connectionHint) {
-                        Log.d(TAG, "onConnected: " + connectionHint);
-                        // Now you can use the Data Layer API
-                    }
-                    @Override
-                    public void onConnectionSuspended(int cause) {
-                        Log.d(TAG, "onConnectionSuspended: " + cause);
-                    }
-                })
-                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(ConnectionResult result) {
-                        Log.d(TAG, "onConnectionFailed: " + result);
-                    }
-                })
                         // Request access only to the Wearable API
                 .addApi(Wearable.API)
                 .build();
@@ -79,21 +68,57 @@ public class MainActivity extends ActionBarActivity implements
         colorList.addOnItemTouchListener(new ColorListOnItemTouchListener(this, new ColorListOnItemTouchListener.OnItemClickListener() {
 
             @Override
-            public void onItemClick(View childView, int position) {
-                Cursor c = adapter.getCursor();
-                c.moveToPosition(position);
-                int color = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
-                Intent intent = new Intent(MainActivity.this, ColorDetailsActivity.class);
-                intent.putExtra("colorId", color);
-                startActivity(intent);
+            public void onItemClick(final View childView, final int position) {
+
+                ValueAnimator positionAnimator = ValueAnimator.ofFloat(childView.getX(), childView.getX() - childView.getWidth() / 2, childView.getX());
+                positionAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                positionAnimator.setDuration(500);
+                positionAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        childView.setX((float) animation.getAnimatedValue());
+                    }
+                });
+                positionAnimator.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        Cursor c = adapter.getCursor();
+                        c.moveToPosition(position);
+                        int color = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
+
+                        Intent intent = new Intent(MainActivity.this, ColorDetailsActivity.class);
+                        intent.putExtra("colorId", color);
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+                positionAnimator.start();
+//                int colorCode = c.getInt(c.getColumnIndex(ColorItem.COLUMN_COLOR));
+//                setColorWallpaper(colorCode);
+
             }
 
             @Override
-            public void onItemLongPress(View childView, int position) {
+            public void onItemLongPress(final View childView, final int position) {
                 Cursor c = adapter.getCursor();
                 c.moveToPosition(position);
-                int colorId = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
+                final int colorId = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
                 final int colorColor = c.getInt(c.getColumnIndex(ColorItem.COLUMN_COLOR));
+
                 Snackbar.make(findViewById(R.id.snackbarPosition), R.string.color_removed, Snackbar.LENGTH_LONG)
                         .setAction(R.string.undo, new View.OnClickListener() {
                             @Override
@@ -104,7 +129,6 @@ public class MainActivity extends ActionBarActivity implements
                             }
                         })
                         .show();
-
                 getContentResolver().delete(ColorContentProvider.CONTENT_URI, ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)});
             }
         }));
@@ -112,6 +136,18 @@ public class MainActivity extends ActionBarActivity implements
         colorList.setAdapter(adapter);
 
         getLoaderManager().initLoader(0, null, this);
+    }
+
+    private void setColorWallpaper(int colorCode) {
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        Bitmap image = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
+        image.eraseColor(colorCode);
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(MainActivity.this);
+        try {
+            wallpaperManager.setBitmap(image);
+        } catch (IOException e) {
+
+        }
     }
 
     @Override
