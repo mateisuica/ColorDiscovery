@@ -150,12 +150,15 @@ public class ColorDetailsFragment extends Fragment {
     private void refreshDBdata() {
         colorCursor = getActivity().getContentResolver().query(ColorContentProvider.CONTENT_URI,
                 null, ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)}, null);
-        if(colorCursor != null && colorCursor.getCount() > 0) {
-            colorCursor.moveToFirst();
-            colorCode = colorCursor.getInt(colorCursor.getColumnIndex(ColorItem.COLUMN_COLOR));
-            customName = colorCursor.getString(colorCursor.getColumnIndex(ColorItem.COLUMN_NAME));
-            colorNewName.setText(customName);
-            bindDataToUI(colorCode, customName);
+        if(colorCursor != null) {
+            if(colorCursor.getCount() > 0) {
+                colorCursor.moveToFirst();
+                colorCode = colorCursor.getInt(colorCursor.getColumnIndex(ColorItem.COLUMN_COLOR));
+                customName = colorCursor.getString(colorCursor.getColumnIndex(ColorItem.COLUMN_NAME));
+                colorNewName.setText(customName);
+                bindDataToUI(colorCode, customName);
+            }
+            colorCursor.close();
         }
     }
 
