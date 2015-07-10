@@ -1,10 +1,13 @@
 package ro.quadroq.colordiscovery.colorlist;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 /**
  * Created by mateisuica on 23/06/15.
@@ -33,9 +36,40 @@ public class ColorListOnItemTouchListener implements RecyclerView.OnItemTouchLis
 
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
-                if(childView != null && mClickListener != null) {
-                    mClickListener.onItemClick(childView, index);
-                }
+                ValueAnimator positionAnimator = ValueAnimator.ofFloat(childView.getX(), childView.getX() - childView.getWidth() / 2, childView.getX());
+                positionAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                positionAnimator.setDuration(500);
+                positionAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        childView.setX((float) animation.getAnimatedValue());
+                    }
+                });
+                positionAnimator.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if(childView != null && mClickListener != null) {
+                            mClickListener.onItemClick(childView, index);
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                });
+                positionAnimator.start();
+
                 return true;
             }
 

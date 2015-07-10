@@ -1,7 +1,5 @@
 package ro.quadroq.colordiscovery.colorlist;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -18,7 +16,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
@@ -68,43 +65,13 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onItemClick(final View childView, final int position) {
 
-                ValueAnimator positionAnimator = ValueAnimator.ofFloat(childView.getX(), childView.getX() - childView.getWidth() / 2, childView.getX());
-                positionAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                positionAnimator.setDuration(500);
-                positionAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        childView.setX((float) animation.getAnimatedValue());
-                    }
-                });
-                positionAnimator.addListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
+                Cursor c = adapter.getCursor();
+                c.moveToPosition(position);
+                int color = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
 
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        Cursor c = adapter.getCursor();
-                        c.moveToPosition(position);
-                        int color = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
-
-                        Intent intent = new Intent(MainActivity.this, ColorDetailsActivity.class);
-                        intent.putExtra(Constants.COLOR_ID, color);
-                        startActivity(intent);
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                });
-                positionAnimator.start();
+                Intent intent = new Intent(MainActivity.this, ColorDetailsActivity.class);
+                intent.putExtra(Constants.COLOR_ID, color);
+                startActivity(intent);
 //                int colorCode = c.getInt(c.getColumnIndex(ColorItem.COLUMN_COLOR));
 //                setColorWallpaper(colorCode);
 
