@@ -28,8 +28,8 @@
             android:layout_gravity="center"
             >
         <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/activity_main_no_colors_icon_size"
+            android:layout_height="@dimen/activity_main_no_colors_icon_size"
             android:layout_gravity="center_horizontal"
             android:background="@drawable/ic_smartwatch"
             />
@@ -49,11 +49,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/addButton"
         android:layout_gravity="bottom|end"
-        android:layout_margin="20dp"
-        app:elevation="6dp"
+        android:layout_margin="@dimen/fab_margin"
+        app:elevation="@dimen/fab_elevation"
         android:src="@drawable/ic_add"
         android:text="@string/add_color"
         />
-
 
 </android.support.design.widget.CoordinatorLayout>

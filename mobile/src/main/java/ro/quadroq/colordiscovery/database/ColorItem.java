@@ -1,4 +1,4 @@
-package ro.quadroq.colordiscovery;
+package ro.quadroq.colordiscovery.database;
 
 /**
  * Created by mateisuica on 21/06/15.

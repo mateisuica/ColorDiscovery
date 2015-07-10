@@ -1,4 +1,4 @@
-package ro.quadroq.colordiscovery;
+package ro.quadroq.colordiscovery.database;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;

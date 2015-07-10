@@ -1,15 +1,13 @@
-package ro.quadroq.colordiscovery;
+package ro.quadroq.colordiscovery.colorlist;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.app.LoaderManager;
-import android.app.WallpaperManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,10 +23,12 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
 
-import java.io.IOException;
-
+import ro.quadroq.colordiscovery.R;
 import ro.quadroq.colordiscovery.coloradd.AddColorActivity;
 import ro.quadroq.colordiscovery.colordetails.ColorDetailsActivity;
+import ro.quadroq.colordiscovery.database.ColorContentProvider;
+import ro.quadroq.colordiscovery.database.ColorItem;
+import ro.quadroq.commonclasses.Constants;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -41,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements
     private CardView noColorsSign;
 
     GoogleApiClient mGoogleApiClient;
-    private static final String TAG = "MobileMainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements
                         int color = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
 
                         Intent intent = new Intent(MainActivity.this, ColorDetailsActivity.class);
-                        intent.putExtra("colorId", color);
+                        intent.putExtra(Constants.COLOR_ID, color);
                         startActivity(intent);
                     }
 
@@ -138,17 +136,17 @@ public class MainActivity extends AppCompatActivity implements
         getLoaderManager().initLoader(0, null, this);
     }
 
-    private void setColorWallpaper(int colorCode) {
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        Bitmap image = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
-        image.eraseColor(colorCode);
-        WallpaperManager wallpaperManager = WallpaperManager.getInstance(MainActivity.this);
-        try {
-            wallpaperManager.setBitmap(image);
-        } catch (IOException e) {
-
-        }
-    }
+//    private void setColorWallpaper(int colorCode) {
+//        DisplayMetrics dm = getResources().getDisplayMetrics();
+//        Bitmap image = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
+//        image.eraseColor(colorCode);
+//        WallpaperManager wallpaperManager = WallpaperManager.getInstance(MainActivity.this);
+//        try {
+//            wallpaperManager.setBitmap(image);
+//        } catch (IOException e) {
+//
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -162,9 +160,6 @@ public class MainActivity extends AppCompatActivity implements
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-
         return super.onOptionsItemSelected(item);
     }
 

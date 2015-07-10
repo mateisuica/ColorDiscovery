@@ -1,4 +1,4 @@
-package ro.quadroq.colordiscovery;
+package ro.quadroq.colordiscovery.colorlist;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -69,7 +69,7 @@ public class ColorListOnItemTouchListener implements RecyclerView.OnItemTouchLis
          * @param childView View of the item that was clicked.
          * @param position  Position of the item that was clicked.
          */
-        public void onItemClick(View childView, int position);
+        void onItemClick(View childView, int position);
 
         /**
          * Called when an item is long pressed.
@@ -77,7 +77,7 @@ public class ColorListOnItemTouchListener implements RecyclerView.OnItemTouchLis
          * @param childView View of the item that was long pressed.
          * @param position  Position of the item that was long pressed.
          */
-        public void onItemLongPress(View childView, int position);
+        void onItemLongPress(View childView, int position);
 
     }
 

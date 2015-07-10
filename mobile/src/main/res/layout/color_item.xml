@@ -6,7 +6,7 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/color_preview_height"
         android:id="@+id/colorPreview" />
 
 

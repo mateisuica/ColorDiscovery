@@ -4,4 +4,12 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="color_details_label_margin_top">15dp</dimen>
     <dimen name="color_details_label_width">125dp</dimen>
+    <dimen name="activity_main_no_colors_icon_size">100dp</dimen>
+    <dimen name="fab_margin">20dp</dimen>
+    <dimen name="fab_elevation">6dp</dimen>
+    <dimen name="color_details_fragment_card_corner_radius">4dp</dimen>
+    <dimen name="color_details_fragment_controls_margin">5dp</dimen>
+    <dimen name="color_preview_height">60dp</dimen>
+
+
 </resources>

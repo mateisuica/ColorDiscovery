@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="ro.quadroq.colordiscovery.MainActivity"
+            android:name=".colorlist.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +30,7 @@
             </intent-filter>
         </service>
         <provider
-            android:name="ro.quadroq.colordiscovery.ColorContentProvider"
+            android:name=".database.ColorContentProvider"
             android:authorities="ro.quadroq.contentprovider" >
         </provider>
 

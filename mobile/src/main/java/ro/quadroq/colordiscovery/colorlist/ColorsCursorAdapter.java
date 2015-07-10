@@ -1,4 +1,4 @@
-package ro.quadroq.colordiscovery;
+package ro.quadroq.colordiscovery.colorlist;
 
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ro.quadroq.colordiscovery.R;
+import ro.quadroq.colordiscovery.database.ColorItem;
 import ro.quadroq.commonclasses.Utils;
 
 /**

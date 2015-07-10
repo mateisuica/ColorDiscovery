@@ -7,9 +7,9 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import ro.quadroq.colordiscovery.ColorContentProvider;
-import ro.quadroq.colordiscovery.ColorItem;
 import ro.quadroq.colordiscovery.R;
+import ro.quadroq.colordiscovery.database.ColorContentProvider;
+import ro.quadroq.colordiscovery.database.ColorItem;
 import ro.quadroq.commonclasses.Constants;
 import ro.quadroq.commonclasses.Utils;
 import ro.quadroq.commonclasses.colorgenerator.ColorGeneratorView;

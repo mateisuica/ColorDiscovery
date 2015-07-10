@@ -1,4 +1,4 @@
-package ro.quadroq.colordiscovery;
+package ro.quadroq.colordiscovery.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

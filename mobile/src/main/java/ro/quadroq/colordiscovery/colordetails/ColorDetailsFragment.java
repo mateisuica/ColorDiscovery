@@ -20,9 +20,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import ro.quadroq.colordiscovery.ColorContentProvider;
-import ro.quadroq.colordiscovery.ColorItem;
 import ro.quadroq.colordiscovery.R;
+import ro.quadroq.colordiscovery.database.ColorContentProvider;
+import ro.quadroq.colordiscovery.database.ColorItem;
+import ro.quadroq.commonclasses.Constants;
 import ro.quadroq.commonclasses.Utils;
 
 /**
@@ -46,7 +47,7 @@ public class ColorDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            colorId = getArguments().getInt("colorId");
+            colorId = getArguments().getInt(Constants.COLOR_ID);
         }
     }
 

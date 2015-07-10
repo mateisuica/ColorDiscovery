@@ -13,6 +13,8 @@ import com.google.android.gms.wearable.WearableListenerService;
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
 
+import ro.quadroq.colordiscovery.database.ColorContentProvider;
+import ro.quadroq.colordiscovery.database.ColorItem;
 import ro.quadroq.commonclasses.Constants;
 
 /**
