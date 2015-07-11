@@ -33,7 +33,7 @@ public class ColorListFragment extends Fragment  implements
     private ColorsCursorAdapter adapter;
     private RecyclerView colorList;
     private CardView noColorsSign;
-    OnColorSelectedListener mListener;
+    private OnColorSelectedListener mListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,12 +115,6 @@ public class ColorListFragment extends Fragment  implements
 
 
         return root;
-    }
-
-    public void setColorList(Cursor data) {
-        if(data != null) {
-
-        }
     }
 
     @Override
