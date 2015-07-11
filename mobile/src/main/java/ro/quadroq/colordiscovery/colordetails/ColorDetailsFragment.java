@@ -169,7 +169,7 @@ public class ColorDetailsFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.wallpaper_changed, Toast.LENGTH_SHORT).show();
                 return true;
             default:
-                return super.onOptionsItemSelected(item);
+                return false;
         }
 
     }

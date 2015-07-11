@@ -57,6 +57,6 @@ public class ColorDetailsActivity extends AppCompatActivity {
                 startActivity(homeIntent);
                 return true;
         }
-        return (super.onOptionsItemSelected(menuItem));
+        return false;
     }
 }
