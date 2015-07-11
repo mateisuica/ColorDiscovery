@@ -50,17 +50,7 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
 
     }
 
-//    private void setColorWallpaper(int colorCode) {
-//        DisplayMetrics dm = getResources().getDisplayMetrics();
-//        Bitmap image = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
-//        image.eraseColor(colorCode);
-//        WallpaperManager wallpaperManager = WallpaperManager.getInstance(MainActivity.this);
-//        try {
-//            wallpaperManager.setBitmap(image);
-//        } catch (IOException e) {
-//
-//        }
-//    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

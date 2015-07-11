@@ -1,8 +1,10 @@
 package ro.quadroq.colordiscovery.colordetails;
 
 import android.app.Fragment;
+import android.app.WallpaperManager;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -11,7 +13,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -19,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 import ro.quadroq.colordiscovery.R;
 import ro.quadroq.colordiscovery.database.ColorContentProvider;
@@ -32,7 +40,6 @@ import ro.quadroq.commonclasses.Utils;
 public class ColorDetailsFragment extends Fragment {
 
 
-    private Cursor colorCursor;
     private int colorId;
     private ImageView imageView;
     private TextView textView;
@@ -49,6 +56,7 @@ public class ColorDetailsFragment extends Fragment {
         if(getArguments() != null) {
             colorId = getArguments().getInt(Constants.COLOR_ID);
         }
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -137,10 +145,10 @@ public class ColorDetailsFragment extends Fragment {
                 int updated = getActivity().getContentResolver().update(ColorContentProvider.CONTENT_URI, contentValues,
                         ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)});
                 if(updated > 0) {
-                    Toast.makeText(getActivity(), "The changes were saved successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.changes_saved, Toast.LENGTH_SHORT).show();
                     refreshDBdata();
                 } else {
-                    Toast.makeText(getActivity(), "There was a problem saving the changes!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.changes_problem, Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -148,8 +156,26 @@ public class ColorDetailsFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_set_wallpaper:
+                setColorWallpaper(colorCode);
+                Toast.makeText(getActivity(), R.string.wallpaper_changed, Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
     private void refreshDBdata() {
-        colorCursor = getActivity().getContentResolver().query(ColorContentProvider.CONTENT_URI,
+        Cursor colorCursor = getActivity().getContentResolver().query(ColorContentProvider.CONTENT_URI,
                 null, ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)}, null);
         if(colorCursor != null) {
             if(colorCursor.getCount() > 0) {
@@ -190,5 +216,17 @@ public class ColorDetailsFragment extends Fragment {
         blueBar.getProgressDrawable().setBounds(blueBounds);
         blueBar.setProgress(blue);
 
+    }
+
+    private void setColorWallpaper(int colorCode) {
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        Bitmap image = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels, Bitmap.Config.ARGB_8888);
+        image.eraseColor(colorCode);
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(getActivity());
+        try {
+            wallpaperManager.setBitmap(image);
+        } catch (IOException e) {
+
+        }
     }
 }

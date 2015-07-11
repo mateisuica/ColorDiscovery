@@ -2,8 +2,8 @@
     <string name="app_name">Color Discovery</string>
     <string name="add_color">Add Color</string>
     <string name="color_details">Color Details</string>
-    <string name="select_colors_on_watch">No colors saved.</string>
-    <string name="color_removed">The color has been removed.</string>
+    <string name="select_colors_on_watch">No colors saved</string>
+    <string name="color_removed">The color has been removed</string>
     <string name="share_subject">Look at this color</string>
     <string name="share_dialog_title">Share the color</string>
     <string name="undo">Undo</string>
@@ -11,4 +11,8 @@
     <string name="red">Red</string>
     <string name="green">Green</string>
     <string name="blue">Blue</string>
+    <string name="changes_saved">The changes were saved successfully</string>
+    <string name="changes_problem">There was a problem saving the changes</string>
+    <string name="action_set_wallpaper">Set as wallpaper</string>
+    <string name="wallpaper_changed">The wallpaper has changed</string>
 </resources>
