@@ -36,39 +36,41 @@ public class ColorListOnItemTouchListener implements RecyclerView.OnItemTouchLis
 
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
-                ValueAnimator positionAnimator = ValueAnimator.ofFloat(childView.getX(), childView.getX() - childView.getWidth() / 2, childView.getX());
-                positionAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                positionAnimator.setDuration(500);
-                positionAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        childView.setX((float) animation.getAnimatedValue());
-                    }
-                });
-                positionAnimator.addListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if(childView != null && mClickListener != null) {
-                            mClickListener.onItemClick(childView, index);
+                if(childView != null) {
+                    ValueAnimator positionAnimator = ValueAnimator.ofFloat(childView.getX(), childView.getX() - childView.getWidth() / 2, childView.getX());
+                    positionAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+                    positionAnimator.setDuration(500);
+                    positionAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            childView.setX((float) animation.getAnimatedValue());
                         }
-                    }
+                    });
+                    positionAnimator.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
 
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
+                        }
 
-                    }
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            if (childView != null && mClickListener != null) {
+                                mClickListener.onItemClick(childView, index);
+                            }
+                        }
 
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
 
-                    }
-                });
-                positionAnimator.start();
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                    positionAnimator.start();
+                }
 
                 return true;
             }

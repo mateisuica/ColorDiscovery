@@ -1,106 +1,53 @@
 package ro.quadroq.colordiscovery.colorlist;
 
-import android.app.LoaderManager;
-import android.content.ContentValues;
-import android.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.Wearable;
+import android.widget.FrameLayout;
 
 import ro.quadroq.colordiscovery.R;
-import ro.quadroq.colordiscovery.coloradd.AddColorActivity;
 import ro.quadroq.colordiscovery.colordetails.ColorDetailsActivity;
-import ro.quadroq.colordiscovery.database.ColorContentProvider;
-import ro.quadroq.colordiscovery.database.ColorItem;
+import ro.quadroq.colordiscovery.colordetails.ColorDetailsFragment;
 import ro.quadroq.commonclasses.Constants;
 
 
-public class MainActivity extends AppCompatActivity implements
-        LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements ColorListFragment.OnColorSelectedListener {
 
     // private Cursor cursor;
-    private ColorsCursorAdapter adapter;
-    private RecyclerView colorList;
-    private CardView noColorsSign;
-
-    GoogleApiClient mGoogleApiClient;
+    int selectedColor;
+    private FrameLayout detailsContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        colorList = (RecyclerView) findViewById(R.id.colorList);
-        noColorsSign = (CardView) findViewById(R.id.no_color_sign);
-        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.addButton);
 
+        detailsContainer = (FrameLayout) findViewById(R.id.details_fragment);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AddColorActivity.class);
-                startActivity(intent);
+        if (savedInstanceState != null) {
+            selectedColor = savedInstanceState.getInt(Constants.COLOR_ID);
+            if(selectedColor != 0) {
+                onColorSelected(selectedColor);
             }
-        });
+            return;
+        }
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                        // Request access only to the Wearable API
-                .addApi(Wearable.API)
-                .build();
-        colorList.setLayoutManager(new LinearLayoutManager(this));
-        colorList.addOnItemTouchListener(new ColorListOnItemTouchListener(this, new ColorListOnItemTouchListener.OnItemClickListener() {
+        if (findViewById(R.id.list_fragment) != null) {
+            ColorListFragment colorListFragment = new ColorListFragment();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.list_fragment, colorListFragment).commit();
+        }
 
-            @Override
-            public void onItemClick(final View childView, final int position) {
+        if (detailsContainer != null && selectedColor != 0) {
+            ColorDetailsFragment colorDetailsFragment = getColorDetailsFragment();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.details_fragment, colorDetailsFragment).commit();
+        }
 
-                Cursor c = adapter.getCursor();
-                c.moveToPosition(position);
-                int color = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
 
-                Intent intent = new Intent(MainActivity.this, ColorDetailsActivity.class);
-                intent.putExtra(Constants.COLOR_ID, color);
-                startActivity(intent);
-//                int colorCode = c.getInt(c.getColumnIndex(ColorItem.COLUMN_COLOR));
-//                setColorWallpaper(colorCode);
-
-            }
-
-            @Override
-            public void onItemLongPress(final View childView, final int position) {
-                Cursor c = adapter.getCursor();
-                c.moveToPosition(position);
-                final int colorId = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
-                final int colorColor = c.getInt(c.getColumnIndex(ColorItem.COLUMN_COLOR));
-
-                Snackbar.make(findViewById(R.id.snackbarPosition), R.string.color_removed, Snackbar.LENGTH_LONG)
-                        .setAction(R.string.undo, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ContentValues contentValues = new ContentValues();
-                                contentValues.put(ColorItem.COLUMN_COLOR, colorColor);
-                                getContentResolver().insert(ColorContentProvider.CONTENT_URI, contentValues);
-                            }
-                        })
-                        .show();
-                getContentResolver().delete(ColorContentProvider.CONTENT_URI, ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)});
-            }
-        }));
-        adapter = new ColorsCursorAdapter(null);
-        colorList.setAdapter(adapter);
-
-        getLoaderManager().initLoader(0, null, this);
     }
 
 //    private void setColorWallpaper(int colorCode) {
@@ -131,26 +78,30 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this,
-                ColorContentProvider.CONTENT_URI, null, null, null, null);
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putInt(Constants.COLOR_ID, selectedColor);
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if(data.getCount() > 0) {
-            colorList.setVisibility(View.VISIBLE);
-            noColorsSign.setVisibility(View.GONE);
+    public void onColorSelected(int colorId) {
+        selectedColor = colorId;
+        if(detailsContainer != null) {
+            ColorDetailsFragment colorDetailsFragment = getColorDetailsFragment();
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.details_fragment, colorDetailsFragment).commit();
         } else {
-            colorList.setVisibility(View.GONE);
-            noColorsSign.setVisibility(View.VISIBLE);
+            Intent intent = new Intent(this, ColorDetailsActivity.class);
+            intent.putExtra(Constants.COLOR_ID, selectedColor);
+            startActivity(intent);
         }
-        adapter.swapCursor(data);
     }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        adapter.swapCursor(null);
+    private ColorDetailsFragment getColorDetailsFragment() {
+        ColorDetailsFragment colorDetailsFragment = new ColorDetailsFragment();
+        Bundle args = new Bundle();
+        args.putInt(Constants.COLOR_ID, selectedColor);
+        colorDetailsFragment.setArguments(args);
+        return colorDetailsFragment;
     }
-
 }
