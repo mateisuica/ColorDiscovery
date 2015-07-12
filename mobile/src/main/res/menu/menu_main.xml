@@ -3,5 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
     <item android:id="@+id/action_set_wallpaper"
         android:title="@string/action_set_wallpaper"
+        android:icon="@drawable/ic_format_paint"
+        app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_share"
+        android:title="@string/action_share"
+        android:icon="@drawable/ic_share_variant"
+        app:actionProviderClass=
+            "android.support.v7.widget.ShareActionProvider"
         app:showAsAction="ifRoom" />
 </menu>

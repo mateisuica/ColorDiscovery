@@ -3,6 +3,7 @@ package ro.quadroq.colordiscovery.colordetails;
 import android.app.Fragment;
 import android.app.WallpaperManager;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -12,6 +13,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -159,12 +162,26 @@ public class ColorDetailsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
+        // Locate MenuItem with ShareActionProvider
+        MenuItem item = menu.findItem(R.id.action_share);
+
+        // Fetch and store ShareActionProvider
+        ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_subject) + " " + Utils.getColorString(colorCode));
+        sendIntent.setType("text/plain");
+        mShareActionProvider.setShareIntent(sendIntent);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_set_wallpaper:
+                setColorWallpaper(colorCode);
+                Toast.makeText(getActivity(), R.string.wallpaper_changed, Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_share:
                 setColorWallpaper(colorCode);
                 Toast.makeText(getActivity(), R.string.wallpaper_changed, Toast.LENGTH_SHORT).show();
                 return true;

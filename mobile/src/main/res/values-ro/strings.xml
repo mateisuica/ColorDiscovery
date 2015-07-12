@@ -5,7 +5,7 @@
     <string name="color_details">Detaliile culorii</string>
     <string name="select_colors_on_watch">Nicio culoare salvată</string>
     <string name="color_removed">Culoarea a fost ștearsă</string>
-    <string name="share_subject">Uite-te la culoarea asta</string>
+    <string name="share_subject">Uită-te la culoarea asta: </string>
     <string name="share_dialog_title">Împarte culoarea</string>
     <string name="undo">Refă</string>
     <string name="new_name">Poreclă culoare</string>
@@ -13,7 +13,8 @@
     <string name="green">Verde</string>
     <string name="blue">Albastru</string>
     <string name="changes_saved">Modificarile au fost salvate cu succes</string>
-    <string name="changes_problem">A fost o problema la salvarea modificarilor</string>\
-    <string name="action_set_wallpaper">Stabileste ca fundal</string>
+    <string name="changes_problem">A fost o problemă la salvarea modificărilor</string>\
+    <string name="action_set_wallpaper">Stabilește ca fundal</string>
+    <string name="action_share">Distribuie</string>
     <string name="wallpaper_changed">Fundalul a fost schimbat</string>
 </resources>
