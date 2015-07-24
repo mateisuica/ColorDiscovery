@@ -4,8 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.widget.Toolbar;
 import android.widget.FrameLayout;
 
 import ro.quadroq.colordiscovery.R;
@@ -16,6 +15,7 @@ import ro.quadroq.commonclasses.Constants;
 
 public class MainActivity extends AppCompatActivity implements ColorListFragment.OnColorSelectedListener {
 
+    private Toolbar toolbar;
     // private Cursor cursor;
     int selectedColor;
     private FrameLayout detailsContainer;
@@ -24,6 +24,10 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initializing Toolbar and setting it as the actionbar
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         detailsContainer = (FrameLayout) findViewById(R.id.details_fragment);
 
@@ -48,23 +52,6 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
         }
 
 
-    }
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

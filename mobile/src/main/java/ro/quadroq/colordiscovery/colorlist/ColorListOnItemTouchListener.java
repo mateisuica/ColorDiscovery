@@ -85,12 +85,17 @@ public class ColorListOnItemTouchListener implements RecyclerView.OnItemTouchLis
     @Override
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
         childView = rv.findChildViewUnder(e.getX(), e.getY());
-        index = rv.getChildPosition(childView);
+        index = rv.getChildAdapterPosition(childView);
         return mGestureDetector.onTouchEvent(e);
     }
 
     @Override
     public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+    }
+
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean b) {
 
     }
 
