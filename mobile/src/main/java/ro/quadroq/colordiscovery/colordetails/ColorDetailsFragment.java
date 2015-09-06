@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
@@ -145,8 +146,8 @@ public class ColorDetailsFragment extends Fragment {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(ColorItem.COLUMN_NAME, colorNewNameString);
                 contentValues.put(ColorItem.COLUMN_COLOR, colorCode);
-                int updated = getActivity().getContentResolver().update(ColorContentProvider.CONTENT_URI, contentValues,
-                        ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)});
+                int updated = getActivity().getContentResolver().update(ColorContentProvider.COLOR_CONTENT_URI, contentValues,
+                        BaseColumns._ID + "=?", new String[]{Integer.toString(colorId)});
                 if(updated > 0) {
                     Toast.makeText(getActivity(), R.string.changes_saved, Toast.LENGTH_SHORT).show();
                     refreshDBdata();
@@ -192,8 +193,8 @@ public class ColorDetailsFragment extends Fragment {
     }
 
     private void refreshDBdata() {
-        Cursor colorCursor = getActivity().getContentResolver().query(ColorContentProvider.CONTENT_URI,
-                null, ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)}, null);
+        Cursor colorCursor = getActivity().getContentResolver().query(ColorContentProvider.COLOR_CONTENT_URI,
+                null, BaseColumns._ID + "=?", new String[]{Integer.toString(colorId)}, null);
         if(colorCursor != null) {
             if(colorCursor.getCount() > 0) {
                 colorCursor.moveToFirst();

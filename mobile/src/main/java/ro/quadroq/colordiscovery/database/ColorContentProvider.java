@@ -30,17 +30,19 @@ public class ColorContentProvider extends ContentProvider {
     * in a following snippet.
     */
     private ColorsDatabaseHelper database;
-    private static final String BASE_PATH = "color";
+    private static final String COLOR_BASE_PATH = "color";
+    private static final String SCHEMA_BASE_PATH = "schema";
     private static final String AUTHORITY = "ro.quadroq.contentprovider";
-    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
-            + "/" + BASE_PATH);
+    public static final Uri SCHEMA_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + SCHEMA_BASE_PATH);
+    public static final Uri COLOR_CONTENT_URI = Uri.parse("content://" + AUTHORITY
+            + "/" + COLOR_BASE_PATH);
 
 
     static {
-        sUriMatcher.addURI(AUTHORITY, BASE_PATH, COLORS);
-        sUriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", COLOR_ID);
-        sUriMatcher.addURI(AUTHORITY, BASE_PATH, SCHEMAS);
-        sUriMatcher.addURI(AUTHORITY, BASE_PATH + "/#", SCHEMA_ID);
+        sUriMatcher.addURI(AUTHORITY, COLOR_BASE_PATH, COLORS);
+        sUriMatcher.addURI(AUTHORITY, COLOR_BASE_PATH + "/#", COLOR_ID);
+        sUriMatcher.addURI(AUTHORITY, SCHEMA_BASE_PATH, SCHEMAS);
+        sUriMatcher.addURI(AUTHORITY, SCHEMA_BASE_PATH + "/#", SCHEMA_ID);
     }
 
     @Override
@@ -57,8 +59,10 @@ public class ColorContentProvider extends ContentProvider {
         int uriType = sUriMatcher.match(uri);
         switch (uriType) {
             case COLORS:
+                queryBuilder.setTables(ColorsDatabaseHelper.COLOR_TABLE);
                 break;
             case SCHEMAS:
+                queryBuilder.setTables(ColorsDatabaseHelper.SCHEMA_TABLE);
                 break;
             case COLOR_ID:
                 queryBuilder.setTables(ColorsDatabaseHelper.COLOR_TABLE);
@@ -104,7 +108,7 @@ public class ColorContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
         getContext().getContentResolver().notifyChange(uri, null);
-        return Uri.parse(BASE_PATH + "/" + id);
+        return Uri.parse(uri + "/" + id);
     }
 
     @Override

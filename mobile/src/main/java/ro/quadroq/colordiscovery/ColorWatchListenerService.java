@@ -45,13 +45,13 @@ public class ColorWatchListenerService extends WearableListenerService {
             byte[] data = messageEvent.getData();
             ByteBuffer bb = ByteBuffer.wrap(data);
             int color = bb.getInt();
-            Cursor c = getContentResolver().query(ColorContentProvider.CONTENT_URI, null, ColorItem.COLUMN_COLOR + "=?", new String[] {Integer.toString(color) }, null);
+            Cursor c = getContentResolver().query(ColorContentProvider.COLOR_CONTENT_URI, null, ColorItem.COLUMN_COLOR + "=?", new String[] {Integer.toString(color) }, null);
             if(c != null) {
                 if (c.getCount() <= 0) {
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(ColorItem.COLUMN_COLOR, color);
                     Log.d(TAG, Integer.toHexString(color));
-                    getContentResolver().insert(ColorContentProvider.CONTENT_URI, contentValues);
+                    getContentResolver().insert(ColorContentProvider.COLOR_CONTENT_URI, contentValues);
                 }
                 c.close();
             }

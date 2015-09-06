@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -68,7 +69,7 @@ public class ColorListFragment extends Fragment  implements
 
                 Cursor c = adapter.getCursor();
                 c.moveToPosition(position);
-                int color = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
+                int color = c.getInt(c.getColumnIndex(BaseColumns._ID));
 
                 if(mListener != null) {
                     mListener.onColorSelected(color);
@@ -83,7 +84,7 @@ public class ColorListFragment extends Fragment  implements
             public void onItemLongPress(final View childView, final int position) {
                 Cursor c = adapter.getCursor();
                 c.moveToPosition(position);
-                final int colorId = c.getInt(c.getColumnIndex(ColorItem.COLUMN_ID));
+                final int colorId = c.getInt(c.getColumnIndex(BaseColumns._ID));
                 final int colorColor = c.getInt(c.getColumnIndex(ColorItem.COLUMN_COLOR));
 
                 Snackbar.make(root.findViewById(R.id.snackbarPosition), R.string.color_removed, Snackbar.LENGTH_LONG)
@@ -92,11 +93,11 @@ public class ColorListFragment extends Fragment  implements
                             public void onClick(View v) {
                                 ContentValues contentValues = new ContentValues();
                                 contentValues.put(ColorItem.COLUMN_COLOR, colorColor);
-                                getActivity().getContentResolver().insert(ColorContentProvider.CONTENT_URI, contentValues);
+                                getActivity().getContentResolver().insert(ColorContentProvider.COLOR_CONTENT_URI, contentValues);
                             }
                         })
                         .show();
-                getActivity().getContentResolver().delete(ColorContentProvider.CONTENT_URI, ColorItem.COLUMN_ID + "=?", new String[]{Integer.toString(colorId)});
+                getActivity().getContentResolver().delete(ColorContentProvider.COLOR_CONTENT_URI, BaseColumns._ID + "=?", new String[]{Integer.toString(colorId)});
             }
         }));
         adapter = new ColorsCursorAdapter(null);
@@ -120,7 +121,7 @@ public class ColorListFragment extends Fragment  implements
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getActivity(),
-                ColorContentProvider.CONTENT_URI, null, null, null, null);
+                ColorContentProvider.COLOR_CONTENT_URI, null, null, null, null);
     }
 
     @Override

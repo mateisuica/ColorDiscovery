@@ -50,13 +50,13 @@ public class AddColorActivity extends Activity {
     private void addColorToDatabase(int color) {
 
 
-        Cursor c = getContentResolver().query(ColorContentProvider.CONTENT_URI, null, ColorItem.COLUMN_COLOR + "=?", new String[]{Integer.toString(color)}, null);
+        Cursor c = getContentResolver().query(ColorContentProvider.COLOR_CONTENT_URI, null, ColorItem.COLUMN_COLOR + "=?", new String[]{Integer.toString(color)}, null);
         if(c != null) {
             if (c.getCount() <= 0) {
 
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(ColorItem.COLUMN_COLOR, color);
-                getContentResolver().insert(ColorContentProvider.CONTENT_URI, contentValues);
+                getContentResolver().insert(ColorContentProvider.COLOR_CONTENT_URI, contentValues);
                 Toast.makeText(AddColorActivity.this, "Color " + Utils.getColorString(color) + " saved!", Toast.LENGTH_SHORT).show();
             }
         c.close();
