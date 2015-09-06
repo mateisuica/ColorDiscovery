@@ -3,6 +3,7 @@ package ro.quadroq.colordiscovery.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 
 /**
  * Created by mateisuica on 21/06/15.
@@ -10,15 +11,25 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class ColorsDatabaseHelper extends SQLiteOpenHelper {
 
     public static final String COLOR_TABLE = "color";
+    public static final String SCHEMA_TABLE = "schema";
     private static final String DBNAME = "colors.db";
-    private static final int version = 2;
+    private static final int version = 3;
 
-    private static final String SQL_CREATE_MAIN = "CREATE TABLE " +
+    private static final String SQL_CREATE_COLORS = "CREATE TABLE " +
             COLOR_TABLE + " " +                       // Table's name
             "(" +                           // The columns in the table
-            " " + ColorItem.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            " " + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             " " + ColorItem.COLUMN_NAME + " TEXT, " +
-            " " + ColorItem.COLUMN_COLOR + " INTEGER" + ")";
+            " " + ColorItem.COLUMN_COLOR + " INTEGER, " +
+            " " + ColorItem.COLUMN_SCHEMA + " INTEGER "
+            + ")";
+
+    private static final String SQL_CREATE_SCHEMA = "CREATE TABLE " +
+            SCHEMA_TABLE + " " +
+            "(" +                           // The columns in the table
+            " " + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            " " + SchemaItem.COLUMN_NAME + " TEXT " + ")";
+
 
     public ColorsDatabaseHelper(Context context) {
         super(context, DBNAME, null, version);
@@ -27,7 +38,8 @@ public class ColorsDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // Creates the main table
-        db.execSQL(SQL_CREATE_MAIN);
+        db.execSQL(SQL_CREATE_COLORS);
+        db.execSQL(SQL_CREATE_SCHEMA);
     }
 
     @Override
@@ -35,6 +47,9 @@ public class ColorsDatabaseHelper extends SQLiteOpenHelper {
         switch(oldVersion) {
             case 1:
                 db.execSQL("ALTER TABLE " + COLOR_TABLE + " ADD COLUMN  " + ColorItem.COLUMN_NAME + " TEXT;");
+            case 2:
+                db.execSQL(SQL_CREATE_SCHEMA);
+                db.execSQL("ALTER TABLE " + COLOR_TABLE + " ADD COLUMN  " + ColorItem.COLUMN_SCHEMA + " INTEGER;");
                 break;
             default:
                 throw new IllegalStateException(
