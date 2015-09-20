@@ -1,6 +1,7 @@
 package ro.quadroq.colordiscovery.colorlist;
 
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
         drawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                if(menuItem.getItemId() == -1) {
+                if(menuItem.getItemId() == -2) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle(R.string.add_new_schema);
                     LayoutInflater inflater = getLayoutInflater();
@@ -99,10 +100,15 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
                     });
                     builder.create().show();
                 } else {
-                    //TODO Open that schema's fragment
+                    FragmentTransaction ft = getFragmentManager().beginTransaction();
+                    ColorListFragment colorListFragment = new ColorListFragment();
+                    Bundle args = new Bundle();
+                    args.putInt("schema_filter", menuItem.getItemId());
+                    colorListFragment.setArguments(args);
+                    ft.replace(R.id.list_fragment, colorListFragment).addToBackStack("").commit();
                 }
                 Log.d("MENU ITEM", "User clicked " + Integer.toString(menuItem.getItemId()) + " with the title:  " + menuItem.getTitle());
-                return false;
+                return true;
             }
         });
         getLoaderManager().initLoader(0, null, this);
@@ -161,12 +167,13 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
             removeSchemas();
             if(data != null) {
                 subMenu = drawerMenu.addSubMenu("Schemas");
+                subMenu.add(Menu.NONE, -1, Menu.NONE, "All");
                 while(data.moveToNext()) {
                     int id = data.getInt(data.getColumnIndex(SchemaItem._ID));
                     String name = data.getString(data.getColumnIndex(SchemaItem.COLUMN_NAME));
                     subMenu.add(Menu.NONE, id, Menu.NONE, name);
                 }
-                subMenu.add(Menu.NONE, -1, Menu.NONE, "Add new schema");
+                subMenu.add(Menu.NONE, -2, Menu.NONE, "Add new schema");
             }
 
         }

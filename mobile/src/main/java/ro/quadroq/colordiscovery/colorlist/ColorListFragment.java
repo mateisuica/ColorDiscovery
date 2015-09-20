@@ -1,6 +1,5 @@
 package ro.quadroq.colordiscovery.colorlist;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.ContentValues;
@@ -35,21 +34,25 @@ public class ColorListFragment extends Fragment  implements
     private RecyclerView colorList;
     private CardView noColorsSign;
     private OnColorSelectedListener mListener;
+    private int schemaFilter = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Bundle args = getArguments();
+        if(args != null) {
+            schemaFilter = args.getInt("schema_filter", -1);
+        }
         getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         try {
-            mListener = (OnColorSelectedListener) activity;
+            mListener = (OnColorSelectedListener) getActivity();
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnArticleSelectedListener");
+            throw new ClassCastException(getActivity().toString() + " must implement OnArticleSelectedListener");
         }
     }
 
@@ -120,8 +123,13 @@ public class ColorListFragment extends Fragment  implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(),
-                ColorContentProvider.COLOR_CONTENT_URI, null, null, null, null);
+        if(schemaFilter == -1) {
+            return new CursorLoader(getActivity(),
+                    ColorContentProvider.COLOR_CONTENT_URI, null, null, null, null);
+        } else {
+            return new CursorLoader(getActivity(),
+                    ColorContentProvider.COLOR_CONTENT_URI, null, ColorItem.COLUMN_SCHEMA + " =? ", new String[] {Integer.toString(schemaFilter)}, null);
+        }
     }
 
     @Override
