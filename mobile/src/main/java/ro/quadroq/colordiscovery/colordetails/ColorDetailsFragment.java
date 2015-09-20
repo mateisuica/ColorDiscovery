@@ -24,9 +24,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +39,7 @@ import java.io.IOException;
 import ro.quadroq.colordiscovery.R;
 import ro.quadroq.colordiscovery.database.ColorContentProvider;
 import ro.quadroq.colordiscovery.database.ColorItem;
+import ro.quadroq.colordiscovery.database.SchemaItem;
 import ro.quadroq.commonclasses.Constants;
 import ro.quadroq.commonclasses.Utils;
 
@@ -53,6 +58,9 @@ public class ColorDetailsFragment extends Fragment {
     private int colorCode;
     private String customName;
     private EditText colorNewName;
+    private Spinner schemaSpinner;
+    private int schemaId = 0;
+    private String schemaName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,6 +81,24 @@ public class ColorDetailsFragment extends Fragment {
         redBar = (SeekBar) root.findViewById(R.id.redBar);
         blueBar = (SeekBar) root.findViewById(R.id.blueBar);
         greenBar = (SeekBar) root.findViewById(R.id.greenBar);
+        schemaSpinner = (Spinner) root.findViewById(R.id.schema_spinner);
+
+        Cursor c = getActivity().getContentResolver().query(ColorContentProvider.SCHEMA_CONTENT_URI, null, null, null, null);
+        c.setNotificationUri(getActivity().getContentResolver(), ColorContentProvider.SCHEMA_CONTENT_URI);
+        SimpleCursorAdapter sca = new SimpleCursorAdapter(getActivity(), R.layout.spinner_item, c, new String[] {SchemaItem.COLUMN_NAME}, new int[]{R.id.spinnerItemTextView}, 0);
+        schemaSpinner.setAdapter(sca);
+        schemaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Cursor c = (Cursor) parent.getItemAtPosition(position);
+                schemaId = c.getInt(c.getColumnIndex(BaseColumns._ID));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         redBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -146,6 +172,7 @@ public class ColorDetailsFragment extends Fragment {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(ColorItem.COLUMN_NAME, colorNewNameString);
                 contentValues.put(ColorItem.COLUMN_COLOR, colorCode);
+                contentValues.put(ColorItem.COLUMN_SCHEMA, schemaId);
                 int updated = getActivity().getContentResolver().update(ColorContentProvider.COLOR_CONTENT_URI, contentValues,
                         BaseColumns._ID + "=?", new String[]{Integer.toString(colorId)});
                 if(updated > 0) {
@@ -195,11 +222,33 @@ public class ColorDetailsFragment extends Fragment {
     private void refreshDBdata() {
         Cursor colorCursor = getActivity().getContentResolver().query(ColorContentProvider.COLOR_CONTENT_URI,
                 null, BaseColumns._ID + "=?", new String[]{Integer.toString(colorId)}, null);
+
         if(colorCursor != null) {
             if(colorCursor.getCount() > 0) {
                 colorCursor.moveToFirst();
                 colorCode = colorCursor.getInt(colorCursor.getColumnIndex(ColorItem.COLUMN_COLOR));
                 customName = colorCursor.getString(colorCursor.getColumnIndex(ColorItem.COLUMN_NAME));
+                if(!colorCursor.isNull(colorCursor.getColumnIndex(ColorItem.COLUMN_SCHEMA))) {
+                    schemaId = colorCursor.getInt(colorCursor.getColumnIndex(ColorItem.COLUMN_SCHEMA));
+                }
+                if(schemaId != 0) {
+                    Cursor schemaCursor = getActivity().getContentResolver().query(ColorContentProvider.SCHEMA_CONTENT_URI,
+                            null, BaseColumns._ID + "=?", new String[]{Integer.toString(schemaId)}, null);
+                    if(schemaCursor != null) {
+                        schemaCursor.moveToFirst();
+                        schemaName = schemaCursor.getString(schemaCursor.getColumnIndex(SchemaItem.COLUMN_NAME));
+                    }
+                    SpinnerAdapter spa = schemaSpinner.getAdapter();
+                    for(int i  = 0; i < spa.getCount(); i++) {
+                        Cursor c = (Cursor) spa.getItem(i);
+                        if(c.getString(c.getColumnIndex(SchemaItem.COLUMN_NAME)).equals(schemaName)) {
+                            schemaSpinner.setSelection(i);
+                            break;
+                        }
+                    }
+                } else {
+                    schemaSpinner.setSelection(0);
+                }
                 colorNewName.setText(customName);
                 bindDataToUI(colorCode, customName);
             }

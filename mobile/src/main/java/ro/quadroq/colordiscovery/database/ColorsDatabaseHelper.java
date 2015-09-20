@@ -21,7 +21,7 @@ public class ColorsDatabaseHelper extends SQLiteOpenHelper {
             " " + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             " " + ColorItem.COLUMN_NAME + " TEXT, " +
             " " + ColorItem.COLUMN_COLOR + " INTEGER, " +
-            " " + ColorItem.COLUMN_SCHEMA + " INTEGER "
+            " " + ColorItem.COLUMN_SCHEMA + " INTEGER DEFAULT 0"
             + ")";
 
     private static final String SQL_CREATE_SCHEMA = "CREATE TABLE " +
@@ -29,6 +29,8 @@ public class ColorsDatabaseHelper extends SQLiteOpenHelper {
             "(" +                           // The columns in the table
             " " + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             " " + SchemaItem.COLUMN_NAME + " TEXT " + ")";
+
+    private static final String SQL_ADD_UNCATEGORIZED_SCHEMA = "INSERT INTO " + SCHEMA_TABLE + " values(0, \"Uncategorized\")";
 
 
     public ColorsDatabaseHelper(Context context) {
@@ -40,6 +42,7 @@ public class ColorsDatabaseHelper extends SQLiteOpenHelper {
         // Creates the main table
         db.execSQL(SQL_CREATE_COLORS);
         db.execSQL(SQL_CREATE_SCHEMA);
+        db.execSQL(SQL_ADD_UNCATEGORIZED_SCHEMA);
     }
 
     @Override
@@ -49,7 +52,8 @@ public class ColorsDatabaseHelper extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE " + COLOR_TABLE + " ADD COLUMN  " + ColorItem.COLUMN_NAME + " TEXT;");
             case 2:
                 db.execSQL(SQL_CREATE_SCHEMA);
-                db.execSQL("ALTER TABLE " + COLOR_TABLE + " ADD COLUMN  " + ColorItem.COLUMN_SCHEMA + " INTEGER;");
+                db.execSQL(SQL_ADD_UNCATEGORIZED_SCHEMA);
+                db.execSQL("ALTER TABLE " + COLOR_TABLE + " ADD COLUMN  " + ColorItem.COLUMN_SCHEMA + " INTEGER DEFAULT 0;");
                 break;
             default:
                 throw new IllegalStateException(

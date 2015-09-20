@@ -1,7 +1,10 @@
 package ro.quadroq.colordiscovery.colorlist;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -11,10 +14,13 @@ import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import ro.quadroq.colordiscovery.R;
 import ro.quadroq.colordiscovery.colordetails.ColorDetailsActivity;
@@ -70,6 +76,31 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
         drawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
+                if(menuItem.getItemId() == -1) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle(R.string.add_new_schema);
+                    LayoutInflater inflater = getLayoutInflater();
+                    View dialogView = inflater.inflate(R.layout.add_schema_dialog, null, false);
+                    final TextView schemaName = (TextView) dialogView.findViewById(R.id.schemaName);
+                    builder.setView(dialogView);
+                    builder.setPositiveButton(R.string.add, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ContentValues contentValues = new ContentValues();
+                            contentValues.put(SchemaItem.COLUMN_NAME, schemaName.getText().toString());
+                            getContentResolver().insert(ColorContentProvider.SCHEMA_CONTENT_URI, contentValues);
+                        }
+                    });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+                } else {
+                    //TODO Open that schema's fragment
+                }
                 Log.d("MENU ITEM", "User clicked " + Integer.toString(menuItem.getItemId()) + " with the title:  " + menuItem.getTitle());
                 return false;
             }
@@ -136,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
                     subMenu.add(Menu.NONE, id, Menu.NONE, name);
                 }
                 subMenu.add(Menu.NONE, -1, Menu.NONE, "Add new schema");
-                data.close();
             }
 
         }
