@@ -14,7 +14,6 @@ import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -103,11 +102,11 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ColorListFragment colorListFragment = new ColorListFragment();
                     Bundle args = new Bundle();
-                    args.putInt("schema_filter", menuItem.getItemId());
+                    args.putInt(ColorListFragment.SCHEMA_FILTER, menuItem.getItemId());
                     colorListFragment.setArguments(args);
                     ft.replace(R.id.list_fragment, colorListFragment).addToBackStack("").commit();
                 }
-                Log.d("MENU ITEM", "User clicked " + Integer.toString(menuItem.getItemId()) + " with the title:  " + menuItem.getTitle());
+//                Log.d("MENU ITEM", "User clicked " + Integer.toString(menuItem.getItemId()) + " with the title:  " + menuItem.getTitle());
                 return true;
             }
         });
@@ -166,14 +165,14 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
         if(drawerMenu != null) {
             removeSchemas();
             if(data != null) {
-                subMenu = drawerMenu.addSubMenu("Schemas");
-                subMenu.add(Menu.NONE, -1, Menu.NONE, "All");
+                subMenu = drawerMenu.addSubMenu(R.string.schemas);
+                subMenu.add(Menu.NONE, -1, Menu.NONE, R.string.all);
                 while(data.moveToNext()) {
                     int id = data.getInt(data.getColumnIndex(SchemaItem._ID));
                     String name = data.getString(data.getColumnIndex(SchemaItem.COLUMN_NAME));
                     subMenu.add(Menu.NONE, id, Menu.NONE, name);
                 }
-                subMenu.add(Menu.NONE, -2, Menu.NONE, "Add new schema");
+                subMenu.add(Menu.NONE, -2, Menu.NONE, R.string.add_new_schema);
             }
 
         }

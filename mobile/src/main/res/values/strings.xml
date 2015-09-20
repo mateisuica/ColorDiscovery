@@ -12,8 +12,10 @@
     <string name="green">Green</string>
     <string name="blue">Blue</string>
     <string name="schema">Schema</string>
+    <string name="schemas">Schemas</string>
     <string name="add_new_schema">Add new schema</string>
     <string name="add">Add</string>
+    <string name="all">All</string>
     <string name="changes_saved">The changes were saved successfully</string>
     <string name="changes_problem">There was a problem saving the changes</string>
     <string name="action_set_wallpaper">Set as wallpaper</string>

@@ -30,6 +30,7 @@ import ro.quadroq.colordiscovery.database.ColorItem;
 public class ColorListFragment extends Fragment  implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final String SCHEMA_FILTER = "schema_filter";
     private ColorsCursorAdapter adapter;
     private RecyclerView colorList;
     private CardView noColorsSign;
@@ -41,7 +42,7 @@ public class ColorListFragment extends Fragment  implements
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if(args != null) {
-            schemaFilter = args.getInt("schema_filter", -1);
+            schemaFilter = args.getInt(SCHEMA_FILTER, -1);
         }
         getLoaderManager().initLoader(0, null, this);
     }

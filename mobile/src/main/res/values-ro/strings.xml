@@ -17,4 +17,8 @@
     <string name="action_set_wallpaper">Stabilește ca fundal</string>
     <string name="action_share">Distribuie</string>
     <string name="wallpaper_changed">Fundalul a fost schimbat</string>
+    <string name="add_new_schema">Adaugao schemă nouă</string>
+    <string name="all">Toate</string>
+    <string name="schema">Schemă</string>
+    <string name="schemas">Scheme</string>
 </resources>
