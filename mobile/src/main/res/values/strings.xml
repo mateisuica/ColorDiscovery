@@ -21,4 +21,5 @@
     <string name="action_set_wallpaper">Set as wallpaper</string>
     <string name="action_share">Share</string>
     <string name="wallpaper_changed">The wallpaper has changed</string>
+    <string name="double_tap_to_save">Double tap to save a color</string>
 </resources>

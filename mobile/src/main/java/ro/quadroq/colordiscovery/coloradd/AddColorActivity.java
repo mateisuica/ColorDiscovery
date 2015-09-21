@@ -45,6 +45,8 @@ public class AddColorActivity extends Activity {
                 }
             });
         }
+
+        Toast.makeText(this, R.string.double_tap_to_save, Toast.LENGTH_SHORT).show();
     }
 
     private void addColorToDatabase(int color) {
