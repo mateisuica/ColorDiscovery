@@ -78,10 +78,6 @@ public class ColorListFragment extends Fragment  implements
                 if(mListener != null) {
                     mListener.onColorSelected(color);
                 }
-
-//                int colorCode = c.getInt(c.getColumnIndex(ColorItem.COLUMN_COLOR));
-//                setColorWallpaper(colorCode);
-
             }
 
             @Override
@@ -113,6 +109,13 @@ public class ColorListFragment extends Fragment  implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddColorActivity.class);
+                Bundle bundle = new Bundle();
+                if(schemaFilter >= 0) {
+                    bundle.putInt(SCHEMA_FILTER, schemaFilter);
+                } else {
+                    bundle.putInt(SCHEMA_FILTER, 0);
+                }
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -151,7 +154,7 @@ public class ColorListFragment extends Fragment  implements
     }
 
     public interface OnColorSelectedListener {
-        public void onColorSelected(int colorId);
+        void onColorSelected(int colorId);
     }
 
 }
