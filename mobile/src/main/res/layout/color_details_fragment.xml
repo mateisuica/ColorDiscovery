@@ -83,6 +83,7 @@
                     android:max="255"
                     android:splitTrack="false"
                     android:layout_height="wrap_content"
+                    android:splitTrack="false"
                     android:id="@+id/redBar"
                     android:layout_gravity="center_vertical" />
             </LinearLayout>
@@ -107,6 +108,7 @@
                     android:max="255"
                     android:splitTrack="false"
                     android:layout_height="wrap_content"
+                    android:splitTrack="false"
                     android:id="@+id/greenBar"
                     android:layout_gravity="center_vertical" />
             </LinearLayout>
@@ -131,6 +133,7 @@
                     android:max="255"
                     android:splitTrack="false"
                     android:layout_height="wrap_content"
+                    android:splitTrack="false"
                     android:id="@+id/blueBar"
                     android:layout_gravity="center_vertical" />
             </LinearLayout>

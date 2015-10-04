@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
             if(selectedColor != 0) {
                 onColorSelected(selectedColor);
             }
-            return;
         }
 
         if (findViewById(R.id.list_fragment) != null) {
@@ -167,10 +166,12 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
             if(data != null) {
                 subMenu = drawerMenu.addSubMenu(R.string.schemas);
                 subMenu.add(Menu.NONE, -1, Menu.NONE, R.string.all);
-                while(data.moveToNext()) {
-                    int id = data.getInt(data.getColumnIndex(SchemaItem._ID));
-                    String name = data.getString(data.getColumnIndex(SchemaItem.COLUMN_NAME));
-                    subMenu.add(Menu.NONE, id, Menu.NONE, name);
+                if(data.moveToFirst()) {
+                    while (data.moveToNext()) {
+                        int id = data.getInt(data.getColumnIndex(SchemaItem._ID));
+                        String name = data.getString(data.getColumnIndex(SchemaItem.COLUMN_NAME));
+                        subMenu.add(Menu.NONE, id, Menu.NONE, name);
+                    }
                 }
                 subMenu.add(Menu.NONE, -2, Menu.NONE, R.string.add_new_schema);
             }
