@@ -83,7 +83,6 @@
                     android:max="255"
                     android:splitTrack="false"
                     android:layout_height="wrap_content"
-                    android:splitTrack="false"
                     android:id="@+id/redBar"
                     android:layout_gravity="center_vertical" />
             </LinearLayout>
@@ -106,7 +105,6 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:max="255"
-                    android:splitTrack="false"
                     android:layout_height="wrap_content"
                     android:splitTrack="false"
                     android:id="@+id/greenBar"
@@ -131,7 +129,6 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:max="255"
-                    android:splitTrack="false"
                     android:layout_height="wrap_content"
                     android:splitTrack="false"
                     android:id="@+id/blueBar"
