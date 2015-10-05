@@ -13,14 +13,15 @@
     <string name="green">Verde</string>
     <string name="blue">Albastru</string>
     <string name="changes_saved">Modificarile au fost salvate cu succes</string>
-    <string name="changes_problem">A fost o problemă la salvarea modificărilor</string>\
+    <string name="changes_problem">A fost o problemă la salvarea modificărilor</string>
     <string name="action_set_wallpaper">Stabilește ca fundal</string>
     <string name="delete_schema">Șterge schema</string>
     <string name="action_share">Distribuie</string>
     <string name="wallpaper_changed">Fundalul a fost schimbat</string>
-    <string name="add_new_schema">Adaugao schemă nouă</string>
+    <string name="add_new_schema">Adaugă o schemă nouă</string>
     <string name="all">Toate</string>
     <string name="schema">Schemă</string>
     <string name="schemas">Scheme</string>
-    <string name="double_tap_to_save">Atinge de doua ori repede pentru a salva</string>
+    <string name="double_tap_to_save">Atinge de două ori repede pentru a salva</string>
+    <string name="color_was_saved">Culoarea %s a fost salvată!</string>
 </resources>
