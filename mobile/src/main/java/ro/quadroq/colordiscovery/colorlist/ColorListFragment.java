@@ -12,10 +12,14 @@ import android.provider.BaseColumns;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -37,6 +41,7 @@ public class ColorListFragment extends Fragment  implements
     private OnColorSelectedListener mListener;
     private int schemaFilter = -1;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +49,7 @@ public class ColorListFragment extends Fragment  implements
         if(args != null) {
             schemaFilter = args.getInt(SCHEMA_FILTER, -1);
         }
+        setHasOptionsMenu(true);
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -120,6 +126,27 @@ public class ColorListFragment extends Fragment  implements
 
 
         return root;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        if(schemaFilter > 0) {
+            inflater.inflate(R.menu.color_list_menu, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete_schema:
+                getActivity().getContentResolver().delete(ColorContentProvider.COLOR_CONTENT_URI, ColorItem.COLUMN_SCHEMA + "=?", new String[]{Integer.toString(schemaFilter)});
+                getActivity().getContentResolver().delete(ColorContentProvider.SCHEMA_CONTENT_URI, BaseColumns._ID + "=?", new String[]{Integer.toString(schemaFilter)});
+                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(new Intent(MainActivityBroadcastReceiver.SCHEMA_DELETED));
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override

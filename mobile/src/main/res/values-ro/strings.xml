@@ -15,6 +15,7 @@
     <string name="changes_saved">Modificarile au fost salvate cu succes</string>
     <string name="changes_problem">A fost o problemă la salvarea modificărilor</string>\
     <string name="action_set_wallpaper">Stabilește ca fundal</string>
+    <string name="delete_schema">Șterge schema</string>
     <string name="action_share">Distribuie</string>
     <string name="wallpaper_changed">Fundalul a fost schimbat</string>
     <string name="add_new_schema">Adaugao schemă nouă</string>
