@@ -48,7 +48,7 @@ public class AddColorActivity extends Activity {
                 contentValues.put(ColorItem.COLUMN_COLOR, color);
                 contentValues.put(ColorItem.COLUMN_SCHEMA, schemaId);
                 getContentResolver().insert(ColorContentProvider.COLOR_CONTENT_URI, contentValues);
-                Toast.makeText(AddColorActivity.this, "Color " + Utils.getColorString(color) + " saved!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddColorActivity.this, getString(R.string.color_was_saved, Utils.getColorString(color)), Toast.LENGTH_SHORT).show();
             }
         c.close();
         }

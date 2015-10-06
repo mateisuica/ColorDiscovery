@@ -19,7 +19,9 @@
     <string name="changes_saved">The changes were saved successfully</string>
     <string name="changes_problem">There was a problem saving the changes</string>
     <string name="action_set_wallpaper">Set as wallpaper</string>
+    <string name="delete_schema">Delete schema</string>
     <string name="action_share">Share</string>
     <string name="wallpaper_changed">The wallpaper has changed</string>
     <string name="double_tap_to_save">Double tap to save a color</string>
+    <string name="color_was_saved">Color %s saved!</string>
 </resources>

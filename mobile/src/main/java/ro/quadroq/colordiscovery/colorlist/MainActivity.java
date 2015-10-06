@@ -1,13 +1,16 @@
 package ro.quadroq.colordiscovery.colorlist;
 
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
     private FrameLayout detailsContainer;
     private Menu drawerMenu;
     private SubMenu subMenu;
+    private BroadcastReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +69,26 @@ public class MainActivity extends AppCompatActivity implements ColorListFragment
 
         NavigationView drawer = (NavigationView)findViewById(R.id.navigationDrawer);
         drawerMenu = drawer.getMenu();
-        drawer.setNavigationItemSelectedListener(new NavigationViewClickListener(this));
+        drawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                Intent intent = new Intent(MainActivityBroadcastReceiver.SCHEMA_SELECTED);
+                intent.putExtra(MainActivityBroadcastReceiver.SCHEMA_ID, menuItem.getItemId());
+                LocalBroadcastManager.getInstance(MainActivity.this).sendBroadcast(intent);
+                return true;
+            }
+        });
+        receiver =  new MainActivityBroadcastReceiver(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainActivityBroadcastReceiver.SCHEMA_SELECTED));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(MainActivityBroadcastReceiver.SCHEMA_DELETED));
         getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     @Override
